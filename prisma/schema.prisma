@@ -1,0 +1,276 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Services ───────────────────────────────────────────────────────────────
+
+model Service {
+  id              String    @id @default(cuid())
+  name            String
+  description     String
+  price           Decimal   @db.Decimal(10, 2)
+  durationMinutes Int
+  maxCapacity     Int
+  category        String    // Paint | Clay | Throwing | Seasonal | Music
+  imageUrl        String?
+  active          Boolean   @default(true)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  // Relations
+  availabilitySlots AvailabilitySlot[]
+  bookings          Booking[]
+
+  @@map("services")
+}
+
+// ─── Add-ons / Products & Drinks ────────────────────────────────────────────
+
+model Addon {
+  id        String   @id @default(cuid())
+  name      String
+  price     Decimal  @db.Decimal(10, 2)
+  category  String   // Drink | Food | Equipment | Other
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  bookingAddons BookingAddon[]
+
+  @@map("addons")
+}
+
+// ─── Availability Slots ──────────────────────────────────────────────────────
+
+model AvailabilitySlot {
+  id                String   @id @default(cuid())
+  serviceId         String
+  date              DateTime @db.Date
+  startTime         String   // "HH:MM" format
+  endTime           String   // "HH:MM" format
+  capacityRemaining Int
+  isBlackout        Boolean  @default(false)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  // Relations
+  service  Service   @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  bookings Booking[]
+
+  @@map("availability_slots")
+}
+
+// ─── Customers ───────────────────────────────────────────────────────────────
+
+model Customer {
+  id            String   @id @default(cuid())
+  name          String
+  email         String   @unique
+  phone         String?
+  creditBalance Decimal  @default(0) @db.Decimal(10, 2)
+  isVip         Boolean  @default(false)
+  tags          String[] @default([])
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relations
+  bookings  Booking[]
+  giftCards GiftCard[]
+
+  @@map("customers")
+}
+
+// ─── Bookings ─────────────────────────────────────────────────────────────────
+
+model Booking {
+  id            String        @id @default(cuid())
+  bookingRef    String        @unique @default(cuid())
+  customerId    String
+  serviceId     String
+  slotId        String
+  seats         Int           @default(1)
+  totalAmount   Decimal       @db.Decimal(10, 2)
+  amountPaid    Decimal       @default(0) @db.Decimal(10, 2)
+  creditApplied Decimal       @default(0) @db.Decimal(10, 2)
+  status        BookingStatus @default(PENDING)
+  notes         String?
+  qrCode        String?       // base64 or URL
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  // Relations
+  customer      Customer       @relation(fields: [customerId], references: [id])
+  service       Service        @relation(fields: [serviceId], references: [id])
+  slot          AvailabilitySlot @relation(fields: [slotId], references: [id])
+  bookingAddons BookingAddon[]
+  payments      Payment[]
+
+  @@map("bookings")
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  PAID
+  CANCELLED
+  NO_SHOW
+}
+
+// ─── Booking Add-ons (junction) ──────────────────────────────────────────────
+
+model BookingAddon {
+  id        String   @id @default(cuid())
+  bookingId String
+  addonId   String
+  quantity  Int      @default(1)
+  unitPrice Decimal  @db.Decimal(10, 2) // snapshot price at time of booking
+  createdAt DateTime @default(now())
+
+  booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  addon   Addon   @relation(fields: [addonId], references: [id])
+
+  @@map("booking_addons")
+}
+
+// ─── Payments ────────────────────────────────────────────────────────────────
+
+model Payment {
+  id            String        @id @default(cuid())
+  bookingId     String
+  amount        Decimal       @db.Decimal(10, 2)
+  channel       PaymentChannel
+  provider      PaymentProvider
+  providerTxnId String?       // Stripe PaymentIntent ID or Shift4 transaction ID
+  status        PaymentStatus @default(PENDING)
+  metadata      Json?         // raw provider response
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  booking Booking @relation(fields: [bookingId], references: [id])
+
+  @@map("payments")
+}
+
+enum PaymentChannel {
+  ONLINE
+  TERMINAL
+}
+
+enum PaymentProvider {
+  STRIPE
+  SHIFT4
+  CREDIT
+  GIFT_CARD
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCEEDED
+  FAILED
+  REFUNDED
+  VOIDED
+}
+
+// ─── Gift Cards ───────────────────────────────────────────────────────────────
+
+model GiftCard {
+  id               String   @id @default(cuid())
+  code             String   @unique
+  initialBalance   Decimal  @db.Decimal(10, 2)
+  remainingBalance Decimal  @db.Decimal(10, 2)
+  issuedToId       String?
+  expiryDate       DateTime?
+  active           Boolean  @default(true)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  issuedTo Customer? @relation(fields: [issuedToId], references: [id])
+
+  @@map("gift_cards")
+}
+
+// ─── Staff Users ──────────────────────────────────────────────────────────────
+
+model StaffUser {
+  id           String    @id @default(cuid())
+  name         String
+  email        String    @unique
+  role         StaffRole @default(STAFF)
+  passwordHash String
+  active       Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@map("staff_users")
+}
+
+enum StaffRole {
+  OWNER
+  STAFF
+}
+
+// ─── NextAuth Sessions (for customer accounts) ────────────────────────────────
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  role          String    @default("customer")
+  customerId    String?   @unique // links to Customer record
+
+  accounts Account[]
+  sessions Session[]
+
+  @@map("users")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
