@@ -1,26 +1,288 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600;700&display=swap');
+
 @import "tailwindcss";
+@config "../tailwind.config.ts";
 
+@theme {
+  --color-terracotta: #C4613A;
+  --color-terracotta-dark: #A04E2D;
+  --color-terracotta-light: #F0C4A8;
+  --color-terracotta-pale: #FDF0E8;
+
+  --color-clay: #5C3D2E;
+  --color-clay-light: #8B6147;
+  --color-clay-lighter: #B8916E;
+
+  --color-sage: #4A7C59;
+  --color-sage-light: #7AAB88;
+  --color-sage-pale: #C8DED1;
+  --color-sage-dark: #2D5A3D;
+
+  --color-cream: #FAF7F0;
+  --color-cream-dark: #F0EAD6;
+  --color-cream-darker: #E8DCC8;
+  --color-parchment: #E8DCC8;
+  --color-warm-white: #FFFDF9;
+
+  --font-playfair: var(--font-playfair), 'Playfair Display', Georgia, serif;
+  --font-inter: var(--font-inter), 'Inter', -apple-system, sans-serif;
+
+  --radius-pottery: 16px;
+
+  --shadow-pottery-sm: 0 1px 3px rgba(92,61,46,0.08), 0 1px 2px rgba(92,61,46,0.06);
+  --shadow-pottery: 0 4px 16px rgba(92,61,46,0.10), 0 2px 6px rgba(92,61,46,0.06);
+  --shadow-pottery-lg: 0 8px 32px rgba(92,61,46,0.14), 0 4px 12px rgba(92,61,46,0.08);
+  --shadow-pottery-xl: 0 20px 60px rgba(92,61,46,0.18);
+  --shadow-terracotta: 0 4px 16px rgba(196,97,58,0.3);
+}
+
+/* ─── CSS Custom Properties ──────────────────────────────────────────────── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --terracotta:      #C4613A;
+  --terracotta-dark: #A04E2D;
+  --terracotta-light:#F0C4A8;
+  --clay:            #5C3D2E;
+  --clay-light:      #8B6147;
+  --sage:            #4A7C59;
+  --sage-light:      #7AAB88;
+  --sage-pale:       #C8DED1;
+  --cream:           #FAF7F0;
+  --cream-dark:      #F0EAD6;
+  --parchment:       #E8DCC8;
+  --warm-white:      #FFFDF9;
+  --ash:             #9CA3AF;
+  --charcoal:        #374151;
+
+  --font-playfair:   'Playfair Display', Georgia, serif;
+  --font-inter:      'Inter', -apple-system, sans-serif;
+
+  --radius-sm:       6px;
+  --radius-md:       12px;
+  --radius-lg:       20px;
+  --radius-xl:       32px;
+
+  --shadow-sm:       0 1px 3px rgba(92,61,46,0.08), 0 1px 2px rgba(92,61,46,0.06);
+  --shadow-md:       0 4px 16px rgba(92,61,46,0.10), 0 2px 6px rgba(92,61,46,0.06);
+  --shadow-lg:       0 8px 32px rgba(92,61,46,0.14), 0 4px 12px rgba(92,61,46,0.08);
+  --shadow-xl:       0 20px 60px rgba(92,61,46,0.18);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+/* ─── Base Reset & Typography ─────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--cream);
+  color: var(--clay);
+  font-family: var(--font-inter);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-playfair);
+  line-height: 1.2;
+  color: inherit;
+}
+
+/* ─── Tailwind Layer Overrides ────────────────────────────────────────────── */
+@layer base {
+  :root {
+    --background: 250 243 230;
+    --foreground: 92 61 46;
+    --card: 255 253 249;
+    --card-foreground: 92 61 46;
+    --popover: 255 253 249;
+    --popover-foreground: 92 61 46;
+    --primary: 196 97 58;
+    --primary-foreground: 255 253 249;
+    --secondary: 74 124 89;
+    --secondary-foreground: 255 253 249;
+    --muted: 240 234 214;
+    --muted-foreground: 139 97 71;
+    --accent: 200 222 209;
+    --accent-foreground: 45 90 61;
+    --destructive: 220 38 38;
+    --destructive-foreground: 255 255 255;
+    --border: 229 213 200;
+    --input: 229 213 200;
+    --ring: 196 97 58;
+    --radius: 0.75rem;
+  }
+}
+
+@layer utilities {
+  .font-playfair { font-family: var(--font-playfair); }
+  .font-inter    { font-family: var(--font-inter); }
+
+  .text-warm-white     { color: #FFFDF9 !important; }
+  .text-cream          { color: #FAF7F0 !important; }
+  .text-parchment      { color: #E8DCC8 !important; }
+  .text-terracotta     { color: #C4613A !important; }
+  .text-terracotta-light { color: #F0C4A8 !important; }
+  .text-clay           { color: #5C3D2E !important; }
+  .text-clay-light     { color: #8B6147 !important; }
+  .text-sage           { color: #4A7C59 !important; }
+
+  .bg-cream            { background-color: #FAF7F0; }
+  .bg-terracotta       { background-color: #C4613A; }
+  .bg-terracotta-dark  { background-color: #A04E2D; }
+  .bg-clay             { background-color: #5C3D2E; }
+  .bg-clay-light       { background-color: #8B6147; }
+  .bg-sage             { background-color: #4A7C59; }
+  .bg-parchment        { background-color: #E8DCC8; }
+  .bg-warm-white       { background-color: #FFFDF9; }
+  .border-parchment    { border-color: #E8DCC8; }
+  .border-terracotta   { border-color: #C4613A; }
+  .border-cream        { border-color: #FAF7F0; }
+  .shadow-pottery      { box-shadow: var(--shadow-md); }
+  .shadow-pottery-lg   { box-shadow: var(--shadow-lg); }
+}
+
+/* ─── Scrollbar ───────────────────────────────────────────────────────────── */
+::-webkit-scrollbar       { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--cream-dark); }
+::-webkit-scrollbar-thumb { background: var(--parchment); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--clay-light); }
+
+/* ─── Focus Styles ────────────────────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--terracotta);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ─── Selection ───────────────────────────────────────────────────────────── */
+::selection {
+  background: var(--terracotta-light);
+  color: var(--clay);
+}
+
+/* ─── Animations ──────────────────────────────────────────────────────────── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.6; }
+}
+
+.animate-fade-in   { animation: fadeIn 0.5s ease forwards; }
+.animate-slide-up  { animation: slideUp 0.6s ease forwards; }
+.animate-spin-slow { animation: spin-slow 3s linear infinite; }
+.animate-pulse-soft{ animation: pulse-soft 2s ease-in-out infinite; }
+
+/* ─── Skeleton Loading ─────────────────────────────────────────────────────── */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--parchment) 25%,
+    var(--cream-dark) 50%,
+    var(--parchment) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--radius-sm);
+}
+
+/* ─── Card Hover Effects ──────────────────────────────────────────────────── */
+.card-hover {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* ─── Button Base ─────────────────────────────────────────────────────────── */
+.btn-primary {
+  background: linear-gradient(135deg, var(--terracotta) 0%, var(--terracotta-dark) 100%);
+  color: var(--warm-white);
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 12px 28px;
+  font-family: var(--font-inter);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(196,97,58,0.3);
+}
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(196,97,58,0.4);
+}
+.btn-primary:active {
+  transform: translateY(0);
+}
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--terracotta);
+  border: 2px solid var(--terracotta);
+  border-radius: var(--radius-md);
+  padding: 10px 26px;
+  font-family: var(--font-inter);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.btn-secondary:hover {
+  background: var(--terracotta);
+  color: var(--warm-white);
+}
+
+/* ─── Page Transitions ─────────────────────────────────────────────────────── */
+.page-enter { animation: fadeIn 0.4s ease forwards; }
+
+/* ─── Gradient Text ───────────────────────────────────────────────────────── */
+.gradient-text {
+  background: linear-gradient(135deg, var(--terracotta) 0%, var(--clay) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ─── Glassmorphism ───────────────────────────────────────────────────────── */
+.glass {
+  background: rgba(255, 253, 249, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(229, 213, 200, 0.6);
+}
+
+/* ─── Section Divider ─────────────────────────────────────────────────────── */
+.divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--parchment), transparent);
+  margin: 32px 0;
 }
