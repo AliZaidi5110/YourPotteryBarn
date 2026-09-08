@@ -70,24 +70,30 @@ export default function GiftCardsPage() {
     <>
       <SiteHeader />
       <main className="min-h-screen bg-cream">
-        {/* Hero */}
-        <section className="bg-clay py-16 px-4 sm:px-6 lg:px-8 text-center text-warm-white relative overflow-hidden">
-          <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-15">
-            <div className="absolute -top-10 -right-10 w-80 h-80 rounded-full bg-terracotta blur-3xl" />
-            <div className="absolute -bottom-10 -left-10 w-80 h-80 rounded-full bg-sage blur-3xl" />
+        {/* Hero Section with Gift Card Presentation Background Image */}
+        <section className="relative py-20 sm:py-28 px-4 sm:px-6 lg:px-8 text-center text-warm-white overflow-hidden flex items-center justify-center">
+          {/* Background Gift Card Presentation Image */}
+          <div className="absolute inset-0 z-0 select-none pointer-events-none">
+            <img
+              src="/images/gift-cards/gift-card-hero.jpg"
+              alt="Gift card presentation box at Your Pottery Barn"
+              className="w-full h-full object-cover object-center"
+            />
+            {/* Atmospheric overlay to blend with brand clay palette and ensure pristine text contrast */}
+            <div className="absolute inset-0 bg-gradient-to-t from-clay/95 via-clay/80 to-clay/70" />
           </div>
 
           <div className="max-w-3xl mx-auto relative z-10">
-            <div className="inline-flex items-center gap-2 bg-terracotta/20 border border-terracotta/30 rounded-full px-4 py-1.5 mb-6">
-              <Sparkles size={14} className="text-terracotta-light" />
-              <span className="text-terracotta-light text-xs font-semibold uppercase tracking-widest">
+            <div className="inline-flex items-center gap-2 bg-warm-white/15 backdrop-blur-md border border-warm-white/30 rounded-full px-4 py-1.5 mb-6 shadow-sm">
+              <Sparkles size={14} className="text-amber-300" />
+              <span className="text-warm-white text-xs font-semibold uppercase tracking-widest">
                 The Perfect Creative Gift
               </span>
             </div>
-            <h1 className="font-playfair text-4xl sm:text-5xl font-bold mb-6 text-warm-white">
+            <h1 className="font-playfair text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 text-warm-white drop-shadow-md">
               Give the Gift of Creativity
             </h1>
-            <p className="text-cream/80 text-lg leading-relaxed max-w-2xl mx-auto">
+            <p className="text-cream/90 text-lg sm:text-xl leading-relaxed max-w-2xl mx-auto font-normal drop-shadow-sm">
               Treat someone special to an unforgettable pottery workshop, a relaxed clay session, or ceramic painting at Your Pottery Barn.
             </p>
           </div>
