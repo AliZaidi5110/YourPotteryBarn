@@ -171,7 +171,7 @@ export function TestimonialsSection() {
           onMouseLeave={() => setIsPaused(false)}
         >
           {/* Base Image Container (Handcrafted pottery cups on shelf) */}
-          <div className="relative w-full min-h-[580px] sm:min-h-[620px] lg:min-h-[660px]">
+          <div className="relative w-full min-h-[460px] sm:min-h-[560px] lg:min-h-[640px]">
             <img
               src="/images/testimonials/pottery-cups-shelf.jpg"
               alt="Handcrafted ceramic cups and stoneware pottery on clean studio shelf at Your Pottery Barn"
@@ -192,42 +192,42 @@ export function TestimonialsSection() {
             </div>
 
             {/* Floating Review Card - Positioned in the Top-Right of the Image */}
-            <div className="relative z-20 sm:absolute sm:top-4 sm:right-4 lg:top-6 lg:right-6 w-full sm:max-w-sm md:max-w-sm lg:max-w-[380px] p-3 sm:p-0">
-              <div className="bg-warm-white/95 backdrop-blur-xl rounded-2xl p-4 sm:p-5 border border-parchment shadow-pottery-xl transition-all duration-300">
+            <div className="relative z-20 sm:absolute sm:top-4 sm:right-4 lg:top-6 lg:right-6 w-full max-w-[340px] sm:max-w-sm md:max-w-sm lg:max-w-[380px] mx-auto sm:mx-0 p-2 sm:p-0 pt-3 sm:pt-0">
+              <div className="bg-warm-white/95 backdrop-blur-xl rounded-xl sm:rounded-2xl p-3.5 sm:p-5 border border-parchment shadow-pottery-xl transition-all duration-300">
                 
                 {/* Review Header: Google Badge & Service Tag */}
-                <div className="flex items-center justify-between gap-2 mb-3 pb-2.5 border-b border-parchment/80">
+                <div className="flex items-center justify-between gap-2 mb-2 pb-2 sm:mb-3 sm:pb-2.5 border-b border-parchment/80">
                   <div className="flex items-center gap-1.5">
                     {/* Google 'G' Logo Badge */}
-                    <div className="w-5 h-5 rounded-full bg-white shadow-xs border border-parchment flex items-center justify-center shrink-0">
-                      <svg viewBox="0 0 24 24" width="12" height="12" className="shrink-0">
+                    <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-white shadow-xs border border-parchment flex items-center justify-center shrink-0">
+                      <svg viewBox="0 0 24 24" className="w-2.5 h-2.5 sm:w-3 sm:h-3 shrink-0">
                         <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                         <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
                         <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
                         <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
                       </svg>
                     </div>
-                    <span className="text-[11px] font-bold text-clay tracking-tight">Google Review</span>
-                    <CheckCircle2 size={11} className="text-emerald-600 ml-0.5" />
+                    <span className="text-[10px] sm:text-[11px] font-bold text-clay tracking-tight">Google Review</span>
+                    <CheckCircle2 className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-emerald-600 ml-0.5" />
                   </div>
 
-                  <span className="text-[10px] font-semibold text-terracotta bg-terracotta/10 px-2 py-0.5 rounded-full truncate max-w-[150px]">
+                  <span className="text-[9px] sm:text-[10px] font-semibold text-terracotta bg-terracotta/10 px-2 py-0.5 rounded-full truncate max-w-[130px] sm:max-w-[150px]">
                     {current.serviceTag}
                   </span>
                 </div>
 
                 {/* Star Rating */}
-                <div className="flex items-center gap-0.5 text-amber-400 mb-2.5">
+                <div className="flex items-center gap-0.5 text-amber-400 mb-1.5 sm:mb-2.5">
                   {[...Array(current.rating)].map((_, i) => (
-                    <Star key={i} size={13} className="fill-amber-400 text-amber-400" />
+                    <Star key={i} className="w-3 h-3 sm:w-3.5 sm:h-3.5 fill-amber-400 text-amber-400" />
                   ))}
                 </div>
 
                 {/* Review Text Container with smooth fade transition */}
-                <div className="relative min-h-[85px] sm:min-h-[95px] flex items-center mb-3.5">
-                  <Quote size={20} className="absolute -top-1 -left-0.5 text-terracotta/20 pointer-events-none" />
+                <div className="relative min-h-[60px] sm:min-h-[90px] flex items-center mb-2.5 sm:mb-3.5">
+                  <Quote className="w-4 h-4 sm:w-5 sm:h-5 absolute -top-0.5 -left-0.5 text-terracotta/20 pointer-events-none" />
                   <p 
-                    className={`text-clay text-xs sm:text-[13px] leading-relaxed pl-4 transition-opacity duration-300 ${
+                    className={`text-clay text-[11px] sm:text-[13px] leading-relaxed pl-3.5 sm:pl-4 transition-opacity duration-300 ${
                       isTransitioning ? 'opacity-0' : 'opacity-100'
                     }`}
                   >
@@ -236,16 +236,16 @@ export function TestimonialsSection() {
                 </div>
 
                 {/* Author Info & Nav Controls */}
-                <div className="flex items-center justify-between pt-3 border-t border-parchment/80">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-full bg-clay text-warm-white font-bold flex items-center justify-center text-xs shadow-inner shrink-0">
+                <div className="flex items-center justify-between pt-2 sm:pt-3 border-t border-parchment/80">
+                  <div className="flex items-center gap-2 sm:gap-2.5">
+                    <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-clay text-warm-white font-bold flex items-center justify-center text-[10px] sm:text-xs shadow-inner shrink-0">
                       {current.name.charAt(0)}
                     </div>
                     <div>
-                      <h4 className="font-playfair font-bold text-clay text-sm leading-tight">
+                      <h4 className="font-playfair font-bold text-clay text-xs sm:text-sm leading-tight">
                         {current.name}
                       </h4>
-                      <p className="text-[10px] text-clay-light">
+                      <p className="text-[9px] sm:text-[10px] text-clay-light">
                         {current.badge} • {current.date}
                       </p>
                     </div>
@@ -256,31 +256,31 @@ export function TestimonialsSection() {
                     <button
                       onClick={prevReview}
                       aria-label="Previous review"
-                      className="w-7 h-7 rounded-full bg-cream hover:bg-parchment/80 text-clay flex items-center justify-center transition-colors shadow-xs"
+                      className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-cream hover:bg-parchment/80 text-clay flex items-center justify-center transition-colors shadow-xs"
                     >
-                      <ChevronLeft size={14} />
+                      <ChevronLeft className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                     </button>
                     <button
                       onClick={nextReview}
                       aria-label="Next review"
                       className="w-7 h-7 rounded-full bg-cream hover:bg-parchment/80 text-clay flex items-center justify-center transition-colors shadow-xs"
                     >
-                      <ChevronRight size={14} />
+                      <ChevronRight className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                     </button>
                   </div>
                 </div>
 
                 {/* 10 Pagination Dots (Clickable & Active Bar) */}
-                <div className="flex items-center justify-center gap-1 mt-3 pt-2.5 border-t border-parchment/40">
+                <div className="flex items-center justify-center gap-1 mt-2 pt-2 sm:mt-3 sm:pt-2.5 border-t border-parchment/40">
                   {GOOGLE_REVIEWS.map((_, idx) => (
                     <button
                       key={idx}
                       onClick={() => changeReview(idx)}
                       aria-label={`Go to review ${idx + 1}`}
-                      className={`h-1.5 rounded-full transition-all duration-300 ${
+                      className={`h-1 sm:h-1.5 rounded-full transition-all duration-300 ${
                         idx === currentIndex
-                          ? 'w-5 bg-terracotta'
-                          : 'w-1.5 bg-parchment hover:bg-clay-light/50'
+                          ? 'w-4 sm:w-5 bg-terracotta'
+                          : 'w-1 sm:w-1.5 bg-parchment hover:bg-clay-light/50'
                       }`}
                     />
                   ))}
