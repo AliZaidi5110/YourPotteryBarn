@@ -195,7 +195,7 @@ export function TestimonialsSection() {
             <div className="relative z-20 sm:absolute sm:top-6 sm:right-6 lg:top-8 lg:right-8 w-full sm:max-w-md lg:max-w-lg p-4 sm:p-0">
               <div className="bg-warm-white/95 backdrop-blur-xl rounded-2xl sm:rounded-3xl p-6 sm:p-8 border border-parchment shadow-pottery-xl transition-all duration-300">
                 
-                {/* Review Header: Google Badge, Star Rating & Counter */}
+                {/* Review Header: Google Badge & Service Tag */}
                 <div className="flex items-center justify-between gap-2 mb-4 pb-4 border-b border-parchment/80">
                   <div className="flex items-center gap-2">
                     {/* Google 'G' Logo Badge */}
@@ -211,24 +211,16 @@ export function TestimonialsSection() {
                     <CheckCircle2 size={13} className="text-emerald-600 ml-0.5" />
                   </div>
 
-                  {/* 5-Second Cycle Progress & Counter */}
-                  <div className="flex items-center gap-1.5 text-xs text-clay-light font-medium">
-                    <span className="font-bold text-terracotta">{currentIndex + 1}</span>
-                    <span>/</span>
-                    <span>{GOOGLE_REVIEWS.length}</span>
-                  </div>
-                </div>
-
-                {/* Stars and Service Tag */}
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-1 text-amber-400">
-                    {[...Array(current.rating)].map((_, i) => (
-                      <Star key={i} size={16} className="fill-amber-400 text-amber-400" />
-                    ))}
-                  </div>
                   <span className="text-[11px] font-semibold text-terracotta bg-terracotta/10 px-2.5 py-0.5 rounded-full">
                     {current.serviceTag}
                   </span>
+                </div>
+
+                {/* Star Rating */}
+                <div className="flex items-center gap-1 text-amber-400 mb-3">
+                  {[...Array(current.rating)].map((_, i) => (
+                    <Star key={i} size={16} className="fill-amber-400 text-amber-400" />
+                  ))}
                 </div>
 
                 {/* Review Text Container with smooth fade transition */}
@@ -293,11 +285,6 @@ export function TestimonialsSection() {
                     />
                   ))}
                 </div>
-
-                {/* 5s auto-changer indicator label */}
-                <p className="text-center text-[10px] text-clay-light/70 mt-2">
-                  Changes automatically every 5 seconds • Hover to pause
-                </p>
 
               </div>
             </div>
