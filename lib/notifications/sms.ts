@@ -1,15 +1,24 @@
 import twilio from 'twilio'
 
-const client = twilio(
-  process.env.TWILIO_ACCOUNT_SID ?? 'placeholder',
-  process.env.TWILIO_AUTH_TOKEN ?? 'placeholder'
-)
-
 const FROM = process.env.TWILIO_FROM_NUMBER ?? '+441234567890'
 const STUDIO_NAME = process.env.NEXT_PUBLIC_STUDIO_NAME ?? 'Your Pottery Barn'
 
 function isTwilioConfigured(): boolean {
-  return !!(process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN && process.env.TWILIO_FROM_NUMBER)
+  return !!(
+    process.env.TWILIO_ACCOUNT_SID &&
+    process.env.TWILIO_AUTH_TOKEN &&
+    process.env.TWILIO_FROM_NUMBER &&
+    !process.env.TWILIO_ACCOUNT_SID.includes('placeholder')
+  )
+}
+
+function getTwilioClient() {
+  if (!isTwilioConfigured()) return null
+  try {
+    return twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN)
+  } catch {
+    return null
+  }
 }
 
 export async function sendBookingConfirmationSMS(params: {
@@ -20,7 +29,8 @@ export async function sendBookingConfirmationSMS(params: {
   date: string
   time: string
 }) {
-  if (!isTwilioConfigured()) {
+  const client = getTwilioClient()
+  if (!client) {
     console.log('[SMS] Twilio not configured — skipping SMS to', params.to)
     return
   }
@@ -43,7 +53,8 @@ export async function sendReminderSMS(params: {
   time: string
   hoursUntil: number
 }) {
-  if (!isTwilioConfigured()) {
+  const client = getTwilioClient()
+  if (!client) {
     console.log('[SMS] Twilio not configured — skipping reminder SMS to', params.to)
     return
   }
@@ -55,3 +66,4 @@ export async function sendReminderSMS(params: {
 
   return client.messages.create({ to: params.to, from: FROM, body: message })
 }
+

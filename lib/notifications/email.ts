@@ -1,6 +1,17 @@
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY ?? 'placeholder')
+function getResend() {
+  const key = process.env.RESEND_API_KEY
+  if (!key || !key.startsWith('re_')) {
+    return null
+  }
+  try {
+    return new Resend(key)
+  } catch {
+    return null
+  }
+}
+
 const FROM = `${process.env.RESEND_FROM_NAME ?? 'Your Pottery Barn'} <${process.env.RESEND_FROM_EMAIL ?? 'bookings@yourpottery.co.uk'}>`
 
 export interface BookingEmailData {
@@ -85,6 +96,12 @@ export async function sendBookingConfirmation(data: BookingEmailData) {
 </body>
 </html>`
 
+  const resend = getResend()
+  if (!resend) {
+    console.log('[Email] Valid RESEND_API_KEY not found — skipping confirmation email to', data.customerEmail)
+    return { data: null, error: null }
+  }
+
   return resend.emails.send({
     from: FROM,
     to: data.customerEmail,
@@ -133,6 +150,12 @@ export async function sendBookingReminder(data: BookingEmailData & { hoursUntil:
   </table>
 </body>
 </html>`
+
+  const resend = getResend()
+  if (!resend) {
+    console.log('[Email] Valid RESEND_API_KEY not found — skipping reminder email to', data.customerEmail)
+    return { data: null, error: null }
+  }
 
   return resend.emails.send({
     from: FROM,
@@ -185,6 +208,12 @@ export async function sendPaymentReceipt(data: {
   </table>
 </body>
 </html>`
+
+  const resend = getResend()
+  if (!resend) {
+    console.log('[Email] Valid RESEND_API_KEY not found — skipping receipt email to', data.customerEmail)
+    return { data: null, error: null }
+  }
 
   return resend.emails.send({
     from: FROM,

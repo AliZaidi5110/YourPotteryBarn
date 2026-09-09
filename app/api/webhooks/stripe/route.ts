@@ -5,7 +5,7 @@ import { sendPaymentReceipt } from '@/lib/notifications/email'
 import { formatCurrency, formatDate } from '@/lib/utils'
 import { BookingStatus, PaymentStatus } from '@prisma/client'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? '', { apiVersion: '2026-08-26.dahlia' as any })
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder', { apiVersion: '2026-08-26.dahlia' as any })
 
 export async function POST(req: NextRequest) {
   const body = await req.text()
