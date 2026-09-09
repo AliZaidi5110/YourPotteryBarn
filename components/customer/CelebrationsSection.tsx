@@ -79,7 +79,11 @@ export function CelebrationsSection() {
                 </li>
                 <li className="flex items-start gap-3">
                   <Check size={18} className="text-terracotta shrink-0 mt-0.5" />
-                  <span><strong>Personalised invitations</strong> &amp; selfie backdrop</span>
+                  <span><strong>Personalised invitations</strong> sent ahead of time</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <Check size={18} className="text-terracotta shrink-0 mt-0.5" />
+                  <span><strong>Dedicated group table</strong> reserved for your party</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <Check size={18} className="text-terracotta shrink-0 mt-0.5" />
@@ -138,7 +142,11 @@ export function CelebrationsSection() {
                 </li>
                 <li className="flex items-start gap-3">
                   <Check size={18} className="text-terracotta-light shrink-0 mt-0.5" />
-                  <span><strong>Personalised Invitations</strong> &amp; photo selfie backdrop</span>
+                  <span><strong>Personalised Invitations</strong> for all your attendees</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <Check size={18} className="text-terracotta-light shrink-0 mt-0.5" />
+                  <span><strong>Unlimited squash, tea &amp; coffee</strong></span>
                 </li>
                 <li className="flex items-start gap-3">
                   <Check size={18} className="text-terracotta-light shrink-0 mt-0.5" />
@@ -159,7 +167,7 @@ export function CelebrationsSection() {
 
         </div>
 
-        {/* Party Atmosphere & Selfie Backdrop Showcase */}
+        {/* Party Atmosphere & Celebration Showcase */}
         <div className="bg-warm-white rounded-3xl p-6 sm:p-8 lg:p-10 border border-parchment shadow-pottery max-w-5xl mx-auto mb-12 overflow-hidden">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
             {/* Balloon Arch Photo */}
@@ -167,12 +175,12 @@ export function CelebrationsSection() {
               <div className="relative rounded-2xl overflow-hidden shadow-pottery border-2 border-parchment/60 aspect-[3/4] max-w-xs mx-auto">
                 <img
                   src="/images/celebrations/party-balloon-arch.jpg"
-                  alt="Birthday celebration balloon arch and selfie photo backdrop at Your Pottery Barn"
+                  alt="Birthday celebration party styling at Your Pottery Barn"
                   className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
                 />
                 <div className="absolute top-3 left-3 bg-warm-white/95 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold text-clay shadow-sm flex items-center gap-1.5">
                   <Sparkles size={12} className="text-terracotta" />
-                  <span>Selfie Backdrop Included</span>
+                  <span>Party Styling &amp; Decor</span>
                 </div>
               </div>
             </div>
@@ -183,16 +191,16 @@ export function CelebrationsSection() {
                 <Gift size={13} /> The Complete Celebration Experience
               </div>
               <h3 className="font-playfair text-2xl sm:text-3xl font-bold text-clay mb-3">
-                Unforgettable Party Moments &amp; Photo Backdrops
+                Unforgettable Parties &amp; Celebrations
               </h3>
               <p className="text-clay-light text-sm sm:text-base leading-relaxed mb-6">
-                Every birthday and private celebration includes dedicated party styling with our festive balloon arch &amp; selfie backdrop. Capture lasting memories with friends and family before rolling up your sleeves for pottery fun!
+                Every birthday and private celebration includes dedicated party styling and reserved tables. Relax with friends and family, share snacks and cake, and create custom ceramic pieces you can keep forever!
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 mb-6 text-sm text-clay">
                 <div className="flex items-start gap-2.5">
                   <Check size={16} className="text-terracotta shrink-0 mt-0.5" />
-                  <span><strong>Dedicated Selfie Station</strong> with balloon arch garland</span>
+                  <span><strong>Dedicated Party Tables</strong> reserved for your group</span>
                 </div>
                 <div className="flex items-start gap-2.5">
                   <Check size={16} className="text-terracotta shrink-0 mt-0.5" />

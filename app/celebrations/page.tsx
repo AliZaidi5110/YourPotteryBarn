@@ -102,7 +102,7 @@ export default function CelebrationsPage() {
                   The Classic Party
                 </h2>
                 <p className="text-clay-light text-sm mb-6 leading-relaxed">
-                  A wonderful 2-hour session designed for 10 to 30 guests. Choose your ceramics, paint in your style, and enjoy complimentary drinks and selfie moments.
+                  A wonderful 2-hour session designed for 10 to 30 guests. Choose your ceramics, paint in your style, and enjoy complimentary refreshments and creative time together.
                 </p>
 
                 <ul className="space-y-3.5 text-sm text-clay mb-8">
@@ -120,7 +120,7 @@ export default function CelebrationsPage() {
                   </li>
                   <li className="flex items-start gap-3">
                     <Check size={18} className="text-terracotta shrink-0 mt-0.5" />
-                    <span><strong>Selfie Backdrop</strong> for memorable party photos</span>
+                    <span><strong>Dedicated Party Tables</strong> for your group</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <Check size={18} className="text-terracotta shrink-0 mt-0.5" />
@@ -178,7 +178,7 @@ export default function CelebrationsPage() {
                   </li>
                   <li className="flex items-start gap-3">
                     <Check size={18} className="text-terracotta-light shrink-0 mt-0.5" />
-                    <span><strong>Personalised Invitations</strong> &amp; studio selfie backdrop</span>
+                    <span><strong>Personalised Invitations</strong> for all your attendees</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <Check size={18} className="text-terracotta-light shrink-0 mt-0.5" />
@@ -202,7 +202,7 @@ export default function CelebrationsPage() {
 
           </div>
 
-          {/* Dedicated Selfie Backdrop & Party Styling Feature Card */}
+          {/* Dedicated Party Atmosphere & Styling Feature Card */}
           <div className="bg-warm-white rounded-3xl p-6 sm:p-8 lg:p-10 border border-parchment shadow-pottery max-w-5xl mx-auto mb-16 overflow-hidden">
             <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
               {/* Balloon Arch Photo */}
@@ -210,12 +210,12 @@ export default function CelebrationsPage() {
                 <div className="relative rounded-2xl overflow-hidden shadow-pottery border-2 border-parchment/60 aspect-[3/4] max-w-xs mx-auto">
                   <img
                     src="/images/celebrations/party-balloon-arch.jpg"
-                    alt="Celebration balloon arch and selfie photo backdrop at Your Pottery Barn"
+                    alt="Celebration party styling and balloon decor at Your Pottery Barn"
                     className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
                   />
                   <div className="absolute top-3 left-3 bg-warm-white/95 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold text-clay shadow-sm flex items-center gap-1.5">
                     <Sparkles size={12} className="text-terracotta" />
-                    <span>Selfie Backdrop Included</span>
+                    <span>Party Styling &amp; Decor</span>
                   </div>
                 </div>
               </div>
@@ -226,16 +226,16 @@ export default function CelebrationsPage() {
                   <Gift size={13} /> Included In Every Celebration
                 </div>
                 <h3 className="font-playfair text-2xl sm:text-3xl font-bold text-clay mb-3">
-                  Festive Balloon Arch &amp; Selfie Photo Backdrop
+                  Festive Party Atmosphere &amp; Celebration Styling
                 </h3>
                 <p className="text-clay-light text-sm sm:text-base leading-relaxed mb-6">
-                  Every party booking includes access to our stylish balloon arch photo backdrop! Take unforgettable group photos of your celebration before or after your pottery session.
+                  Every party booking includes dedicated party styling and reserved tables for your group. Enjoy quality creative time with friends and family during your pottery painting session!
                 </p>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 mb-6 text-sm text-clay">
                   <div className="flex items-start gap-2.5">
                     <Check size={16} className="text-terracotta shrink-0 mt-0.5" />
-                    <span><strong>Balloon Arch &amp; Party Sign</strong> setup ready for photos</span>
+                    <span><strong>Festive Party Decor</strong> &amp; dedicated group tables</span>
                   </div>
                   <div className="flex items-start gap-2.5">
                     <Check size={16} className="text-terracotta shrink-0 mt-0.5" />

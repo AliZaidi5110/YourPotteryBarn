@@ -74,7 +74,7 @@ export const GALLERY_ITEMS: GalleryItem[] = [
     src: '/images/gallery/gallery-9.avif',
     title: 'Private Studio Gathering',
     category: 'Parties',
-    description: 'Exclusive studio hire with private room setup and custom selfie backdrop.',
+    description: 'Exclusive studio hire with private room setup and festive celebration styling.',
   },
   {
     id: 'g-10',
