@@ -1,18 +1,56 @@
+'use client'
+
 import Link from 'next/link'
+import { useRef, useState } from 'react'
+import { Play, Pause } from 'lucide-react'
 
 export function HeroSection() {
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const [isPlaying, setIsPlaying] = useState(true)
+
+  const togglePlay = () => {
+    if (!videoRef.current) return
+    if (isPlaying) {
+      videoRef.current.pause()
+      setIsPlaying(false)
+    } else {
+      videoRef.current.play()
+      setIsPlaying(true)
+    }
+  }
+
   return (
-    <section className="relative overflow-hidden bg-[#EDEDEE] min-h-[560px] lg:min-h-[620px] flex items-center" aria-label="Hero">
-      {/* Background Banner Image featuring user's ceramic tableware artwork */}
-      <div className="absolute inset-0 z-0">
-        <img
-          src="/images/hero/hero-banner.jpg"
-          alt="Turning Clay Into Amazing Art - Handcrafted pottery mugs and glazed bowls"
-          className="w-full h-full object-cover object-right md:object-[right_center]"
-        />
+    <section className="relative overflow-hidden bg-[#EDEDEE] min-h-[580px] lg:min-h-[660px] flex items-center" aria-label="Hero">
+      {/* Background Video featuring family pottery painting session */}
+      <div className="absolute inset-0 z-0 overflow-hidden">
+        <video
+          ref={videoRef}
+          autoPlay
+          loop
+          muted
+          playsInline
+          poster="/images/hero/hero-banner.jpg"
+          className="w-full h-full object-cover object-center"
+        >
+          <source src="/videos/Pottery_studio_and_family_painting_202609091816.mp4" type="video/mp4" />
+          <source src="/videos/hero-video.mp4" type="video/mp4" />
+        </video>
+
         {/* Responsive gradient overlay ensuring contrast for copy on any screen size */}
-        <div className="absolute inset-0 bg-gradient-to-r from-warm-white via-warm-white/95 sm:via-warm-white/90 sm:to-warm-white/15 to-warm-white/60 sm:w-[65%] lg:w-[58%]" />
-        <div className="absolute inset-0 bg-gradient-to-t from-warm-white/80 via-transparent to-transparent sm:hidden" />
+        <div className="absolute inset-0 bg-gradient-to-r from-warm-white via-warm-white/95 sm:via-warm-white/90 sm:to-warm-white/20 to-warm-white/70 sm:w-[68%] lg:w-[58%] pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-warm-white via-warm-white/70 to-transparent sm:hidden pointer-events-none" />
+      </div>
+
+      {/* Video Play/Pause Control in bottom-right */}
+      <div className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 z-20">
+        <button
+          onClick={togglePlay}
+          aria-label={isPlaying ? 'Pause background video' : 'Play background video'}
+          className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-warm-white/80 hover:bg-warm-white backdrop-blur-md border border-parchment/80 text-clay text-xs font-medium shadow-sm hover:shadow transition-all"
+        >
+          {isPlaying ? <Pause size={12} className="text-terracotta" /> : <Play size={12} className="text-terracotta fill-terracotta" />}
+          <span className="hidden sm:inline">{isPlaying ? 'Pause Video' : 'Play Video'}</span>
+        </button>
       </div>
 
       {/* Hero Content */}
