@@ -1,5 +1,6 @@
 import { SiteHeader } from '@/components/customer/SiteHeader'
 import { SiteFooter } from '@/components/customer/SiteFooter'
+import { MeetTheOwnerSection } from '@/components/customer/MeetTheOwnerSection'
 import Link from 'next/link'
 import type { Metadata } from 'next'
 import { Heart, Sparkles, Flame, Users, Clock, MapPin, CheckCircle } from 'lucide-react'
@@ -76,6 +77,9 @@ export default function AboutPage() {
             </div>
           </div>
         </section>
+
+        {/* Meet the Owner / Founder Section */}
+        <MeetTheOwnerSection />
 
         {/* Story Section */}
         <section className="bg-warm-white py-16 border-y border-parchment/60">

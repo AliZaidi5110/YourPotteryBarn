@@ -20,12 +20,21 @@ export function AboutSection() {
             <p className="text-neutral-600 text-sm sm:text-base leading-relaxed mb-8">
               Whether you&apos;re painting your first mug, throwing your first bowl on the wheel, or celebrating a birthday with friends, we&apos;re here to guide you every step of the way &mdash; no experience needed, just a willingness to have fun. From pottery painting and clay workshops to parties, corporate team days, and even the odd ukulele session, our studio is built around one simple idea: creativity is better shared.
             </p>
-            <Link
-              href="/about"
-              className="inline-flex items-center justify-center px-8 py-3.5 rounded-lg bg-[#8c7355] hover:bg-[#786145] text-white font-medium text-base shadow-sm hover:shadow-md transition-all duration-200"
-            >
-              Read More
-            </Link>
+            <div className="flex flex-wrap items-center gap-4">
+              <Link
+                href="/about"
+                className="inline-flex items-center justify-center px-8 py-3.5 rounded-lg bg-[#8c7355] hover:bg-[#786145] text-white font-medium text-base shadow-sm hover:shadow-md transition-all duration-200"
+              >
+                Read More
+              </Link>
+              <a
+                href="#meet-the-owner"
+                className="inline-flex items-center gap-2 text-clay hover:text-terracotta font-semibold text-sm transition-colors py-2 px-3 rounded-lg hover:bg-parchment/40"
+              >
+                <span>Meet Our Founder</span>
+                <span aria-hidden="true">&darr;</span>
+              </a>
+            </div>
           </div>
 
           {/* Right Column: 3-Image Collage */}

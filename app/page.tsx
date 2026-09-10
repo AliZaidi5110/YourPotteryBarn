@@ -2,6 +2,7 @@ import { SiteHeader } from '@/components/customer/SiteHeader'
 import { SiteFooter } from '@/components/customer/SiteFooter'
 import { HeroSection } from '@/components/customer/HeroSection'
 import { AboutSection } from '@/components/customer/AboutSection'
+import { MeetTheOwnerSection } from '@/components/customer/MeetTheOwnerSection'
 import { WhyChooseUsSection } from '@/components/customer/WhyChooseUsSection'
 import { CelebrationsSection } from '@/components/customer/CelebrationsSection'
 import { GallerySection } from '@/components/customer/GallerySection'
@@ -21,6 +22,7 @@ export default function HomePage() {
       <main>
         <HeroSection />
         <AboutSection />
+        <MeetTheOwnerSection />
         <WhyChooseUsSection />
         <CelebrationsSection />
         <GallerySection limit={8} showViewAll={true} />
