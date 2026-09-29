@@ -5,15 +5,17 @@ import { usePathname } from 'next/navigation'
 import { signOut, useSession } from 'next-auth/react'
 import {
   LayoutDashboard, Calendar, ShoppingBag, CreditCard, Users,
-  Settings, BarChart3, UserCog, LogOut, ChevronLeft, ChevronRight, Menu
+  Settings, BarChart3, UserCog, LogOut, ChevronLeft, ChevronRight, Menu, Bell
 } from 'lucide-react'
 import { useState } from 'react'
 import { cn } from '@/lib/utils'
 
 const NAV_ITEMS = [
-  { href: '/admin', icon: LayoutDashboard, label: 'Dashboard',    exact: true },
-  { href: '/admin/bookings',  icon: Calendar,       label: 'Bookings' },
-  { href: '/admin/checkout',  icon: ShoppingBag,    label: 'Checkout',     badge: 'POS' },
+  { href: '/admin', icon: LayoutDashboard, label: 'Dashboard', exact: true },
+  { href: '/admin/calendar',  icon: Calendar,       label: 'Operations Calendar', badge: 'Wix' },
+  { href: '/admin/bookings',  icon: Users,          label: 'Bookings & Rosters' },
+  { href: '/admin/checkout',  icon: ShoppingBag,    label: 'POS Checkout',        badge: 'POS' },
+  { href: '/admin/notifications', icon: Bell,       label: 'Pottery Ready',       badge: 'Alerts' },
   { href: '/admin/payments',  icon: CreditCard,     label: 'Payments' },
   { href: '/admin/customers', icon: Users,          label: 'Customers' },
   { href: '/admin/services',  icon: Settings,       label: 'Services & Add-ons' },

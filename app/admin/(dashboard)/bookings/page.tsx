@@ -52,12 +52,17 @@ export default function BookingsPage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="font-playfair text-3xl font-bold text-clay">Bookings</h1>
-          <p className="text-clay-light mt-1">All sessions, rosters, and booking management.</p>
+          <h1 className="font-playfair text-3xl font-bold text-clay">Bookings &amp; Rosters</h1>
+          <p className="text-clay-light mt-1">All customer sessions, rosters, and booking management.</p>
         </div>
-        <a href="/admin/bookings/new" className="btn-primary flex items-center gap-2 py-2.5 text-sm">
-          <Plus size={16} /> New Booking
-        </a>
+        <div className="flex items-center gap-2">
+          <a href="/admin/calendar" className="btn-secondary flex items-center gap-2 py-2.5 text-sm">
+            <Calendar size={16} /> Operations Calendar
+          </a>
+          <a href="/admin/bookings/new" className="btn-primary flex items-center gap-2 py-2.5 text-sm">
+            <Plus size={16} /> New Booking
+          </a>
+        </div>
       </div>
 
       {/* Filters */}

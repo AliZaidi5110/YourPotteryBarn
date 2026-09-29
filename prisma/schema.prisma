@@ -58,6 +58,11 @@ model AvailabilitySlot {
   startTime         String   // "HH:MM" format
   endTime           String   // "HH:MM" format
   capacityRemaining Int
+  maxCapacity       Int?     @default(16)
+  staffName         String?  @default("Emma Harrison")
+  location          String?  @default("Main Studio - Tables 1-4")
+  notes             String?
+  waitlistCount     Int      @default(0)
   isBlackout        Boolean  @default(false)
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
@@ -83,8 +88,9 @@ model Customer {
   updatedAt     DateTime @updatedAt
 
   // Relations
-  bookings  Booking[]
-  giftCards GiftCard[]
+  bookings      Booking[]
+  giftCards     GiftCard[]
+  notifications Notification[]
 
   @@map("customers")
 }
@@ -104,15 +110,19 @@ model Booking {
   status        BookingStatus @default(PENDING)
   notes         String?
   qrCode        String?       // base64 or URL
+  checkedIn     Boolean       @default(false)
+  checkedInAt   DateTime?
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
 
   // Relations
-  customer      Customer       @relation(fields: [customerId], references: [id])
-  service       Service        @relation(fields: [serviceId], references: [id])
-  slot          AvailabilitySlot @relation(fields: [slotId], references: [id])
-  bookingAddons BookingAddon[]
-  payments      Payment[]
+  customer        Customer          @relation(fields: [customerId], references: [id])
+  service         Service           @relation(fields: [serviceId], references: [id])
+  slot            AvailabilitySlot  @relation(fields: [slotId], references: [id])
+  bookingAddons   BookingAddon[]
+  payments        Payment[]
+  orderDeductions OrderDeduction[]
+  notifications   Notification[]
 
   @@map("bookings")
 }
@@ -123,6 +133,103 @@ enum BookingStatus {
   PAID
   CANCELLED
   NO_SHOW
+}
+
+// ─── Inventory Items (Pottery to Paint / Buy in Studio) ──────────────────────
+
+model InventoryItem {
+  id          String   @id @default(cuid())
+  name        String
+  category    String   // Mugs | Bowls & Plates | Figures & Animals | Vases & Home | Seasonal
+  price       Decimal  @db.Decimal(10, 2)
+  stock       Int      @default(50)
+  imageUrl    String?
+  sku         String?  @unique
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  orderItems  OrderItem[]
+
+  @@map("inventory_items")
+}
+
+// ─── In-Studio Order Deductions (Studio POS) ────────────────────────────────
+
+model OrderDeduction {
+  id              String         @id @default(cuid())
+  bookingId       String
+  grossTotal      Decimal        @db.Decimal(10, 2)
+  depositDeducted Decimal        @db.Decimal(10, 2)
+  balanceDue      Decimal        @db.Decimal(10, 2)
+  status          OrderStatus    @default(PENDING) // PENDING | FULFILLED | COMPLETED
+  paymentMethod   String?        // TERMINAL_SHIFT4 | STRIPE | CASH | CARD
+  paymentTxnId    String?
+  notes           String?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  booking         Booking        @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  items           OrderItem[]
+
+  @@map("order_deductions")
+}
+
+enum OrderStatus {
+  PENDING
+  FULFILLED
+  COMPLETED
+}
+
+model OrderItem {
+  id              String         @id @default(cuid())
+  orderId         String
+  inventoryItemId String?
+  itemName        String
+  quantity        Int            @default(1)
+  unitPrice       Decimal        @db.Decimal(10, 2)
+  totalPrice      Decimal        @db.Decimal(10, 2)
+  createdAt       DateTime       @default(now())
+
+  order           OrderDeduction @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  inventoryItem   InventoryItem? @relation(fields: [inventoryItemId], references: [id])
+
+  @@map("order_items")
+}
+
+// ─── Notifications (Pottery Ready / Firing Delay / Reminders) ───────────────
+
+model Notification {
+  id          String             @id @default(cuid())
+  bookingId   String?
+  customerId  String?
+  recipient   String             // email or phone number
+  type        NotificationType   // COLLECTION_READY | FIRING_DELAY | REMINDER | CUSTOM
+  channel     String             // EMAIL | SMS
+  title       String
+  message     String             @db.Text
+  status      NotificationStatus @default(SENT) // QUEUED | SENT | DELIVERED | FAILED
+  metadata    Json?
+  sentAt      DateTime           @default(now())
+
+  booking     Booking?           @relation(fields: [bookingId], references: [id], onDelete: SetNull)
+  customer    Customer?          @relation(fields: [customerId], references: [id], onDelete: SetNull)
+
+  @@map("notifications")
+}
+
+enum NotificationType {
+  COLLECTION_READY
+  FIRING_DELAY
+  REMINDER
+  CUSTOM
+}
+
+enum NotificationStatus {
+  QUEUED
+  SENT
+  DELIVERED
+  FAILED
 }
 
 // ─── Booking Add-ons (junction) ──────────────────────────────────────────────

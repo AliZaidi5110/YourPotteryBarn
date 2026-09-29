@@ -152,13 +152,18 @@ export default async function AdminDashboard() {
 
         {/* Quick Actions */}
         <div className="bg-warm-white rounded-2xl shadow-pottery border border-parchment/50 p-6">
-          <h2 className="font-playfair font-semibold text-xl text-clay mb-4">Quick Actions</h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="font-playfair font-semibold text-xl text-clay">Studio Quick Actions</h2>
+            <a href="/admin/calendar" className="text-xs font-semibold text-terracotta hover:underline">
+              Ops Calendar →
+            </a>
+          </div>
           <div className="grid grid-cols-2 gap-3">
             {[
-              { href: '/admin/checkout',  label: 'POS Checkout',     icon: '💳', desc: 'Take a payment' },
-              { href: '/admin/bookings?new=true', label: 'New Booking', icon: '➕', desc: 'Add manually' },
-              { href: '/admin/customers', label: 'Customers',        icon: '👥', desc: 'View CRM' },
-              { href: '/admin/reports',   label: 'Reports',          icon: '📊', desc: 'See analytics' },
+              { href: '/admin/calendar',      label: 'Ops Calendar',   icon: '📅', desc: 'Wix timetable & roster' },
+              { href: '/admin/checkout',      label: 'POS Checkout',   icon: '💳', desc: 'Itemize & collect balance' },
+              { href: '/admin/notifications', label: 'Pottery Ready',  icon: '📢', desc: 'Dispatch SMS & Email' },
+              { href: '/admin/customers',     label: 'Customers CRM',  icon: '👥', desc: 'Profiles & balances' },
             ].map(action => (
               <a
                 key={action.href}

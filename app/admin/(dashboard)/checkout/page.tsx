@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { Search, Plus, Loader2, CreditCard, CheckCircle, XCircle, AlertCircle, RefreshCw, Printer, Minus } from 'lucide-react'
+import { Search, Plus, Loader2, CreditCard, CheckCircle, XCircle, AlertCircle, RefreshCw, Printer, Minus, Calendar } from 'lucide-react'
 import { formatCurrency, formatDate, formatTime } from '@/lib/utils'
 
 interface BookingWithDetails {
@@ -116,9 +116,14 @@ export default function CheckoutPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="font-playfair text-3xl font-bold text-clay">POS Checkout</h1>
-        <p className="text-clay-light mt-1">Search for a booking and take payment via the Shift4 card terminal.</p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="font-playfair text-3xl font-bold text-clay">POS Checkout</h1>
+          <p className="text-clay-light mt-1">Search for a booking or launch itemization directly from the Operations Calendar.</p>
+        </div>
+        <a href="/admin/calendar" className="btn-secondary flex items-center gap-2 py-2.5 text-sm self-start sm:self-auto">
+          <Calendar size={16} /> Open Operations Calendar
+        </a>
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">

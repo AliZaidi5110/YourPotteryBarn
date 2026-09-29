@@ -118,7 +118,25 @@ export default function AboutPage() {
                     <MapPin size={20} className="text-terracotta shrink-0 mt-0.5" />
                     <div>
                       <p className="font-semibold">Visit Our Barn</p>
-                      <p className="text-clay-light">14 Artisan Yard, Craft Lane, Potter&apos;s Mill, UK</p>
+                      <a
+                        href="http://google.com/maps/place/Your+Pottery+Barn+HARTLEY/@51.3651727,0.3189965,17z/data=!3m1!4b1!4m6!3m5!1s0x47d8b5189ab051bf:0xfa84a8198d12bb9!8m2!3d51.3651727!4d0.3189965!16s%2Fg%2F11kpcxdhn0?entry=ttu"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-clay-light hover:text-terracotta transition-colors underline block"
+                      >
+                        Hartley Bottom Road, Hartley, Kent, DA3 8LJ
+                      </a>
+                      <p className="text-xs text-clay-light mt-1">
+                        🧭 What3Words:{' '}
+                        <a
+                          href="https://maps.app.goo.gl/2H9VXpmJTzNaU1qn9"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-terracotta font-medium hover:underline"
+                        >
+                          ///bunk.apron.slides
+                        </a>
+                      </p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
@@ -128,6 +146,39 @@ export default function AboutPage() {
                       <p className="text-clay-light">Tuesday – Saturday: 10:00 AM – 9:00 PM</p>
                       <p className="text-clay-light">Sunday: 11:00 AM – 5:00 PM (Mondays Closed)</p>
                     </div>
+                  </div>
+                </div>
+
+                {/* Social Channels Strip */}
+                <div className="pt-4 border-t border-parchment/80">
+                  <p className="text-xs font-semibold text-clay uppercase tracking-wider mb-2.5">
+                    Connect On Social Media
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    <a
+                      href="https://www.instagram.com/your.potterybarn/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-warm-white hover:bg-terracotta/10 border border-parchment text-clay hover:text-terracotta text-xs font-medium shadow-pottery-sm transition-colors"
+                    >
+                      <span>📸 Instagram (@your.potterybarn)</span>
+                    </a>
+                    <a
+                      href="https://www.facebook.com/profile.php?id=100090796065925"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-warm-white hover:bg-terracotta/10 border border-parchment text-clay hover:text-terracotta text-xs font-medium shadow-pottery-sm transition-colors"
+                    >
+                      <span>👍 Facebook Page</span>
+                    </a>
+                    <a
+                      href="http://google.com/maps/place/Your+Pottery+Barn+HARTLEY/@51.3651727,0.3189965,17z/data=!3m1!4b1!4m6!3m5!1s0x47d8b5189ab051bf:0xfa84a8198d12bb9!8m2!3d51.3651727!4d0.3189965!16s%2Fg%2F11kpcxdhn0?entry=ttu"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-warm-white hover:bg-terracotta/10 border border-parchment text-clay hover:text-terracotta text-xs font-medium shadow-pottery-sm transition-colors"
+                    >
+                      <span>📍 Google Maps Reviews</span>
+                    </a>
                   </div>
                 </div>
 
