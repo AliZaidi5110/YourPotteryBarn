@@ -17,13 +17,14 @@ const getNextAuthUrl = () => {
 const nextAuthUrl = getNextAuthUrl()
 process.env.NEXTAUTH_URL = nextAuthUrl
 
-if (!process.env.NEXTAUTH_SECRET || process.env.NEXTAUTH_SECRET === '') {
-  process.env.NEXTAUTH_SECRET = 'your-pottery-barn-production-secret-2026'
-}
+const defaultSecret = 'your-pottery-barn-production-secret-2026-ypb-secure-jwt'
+const nextAuthSecret = process.env.NEXTAUTH_SECRET?.trim() || defaultSecret
+process.env.NEXTAUTH_SECRET = nextAuthSecret
 
 const nextConfig: NextConfig = {
   env: {
     NEXTAUTH_URL: nextAuthUrl,
+    NEXTAUTH_SECRET: nextAuthSecret,
   },
   images: {
     remotePatterns: [

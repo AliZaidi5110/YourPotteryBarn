@@ -5,7 +5,13 @@ import { PrismaAdapter } from '@auth/prisma-adapter'
 import { prisma } from '@/lib/prisma'
 import { compare } from 'bcryptjs'
 
+const NEXTAUTH_SECRET =
+  process.env.NEXTAUTH_SECRET ||
+  process.env.AUTH_SECRET ||
+  'your-pottery-barn-production-secret-2026-ypb-secure-jwt'
+
 export const authOptions: NextAuthOptions = {
+  secret: NEXTAUTH_SECRET,
   session: { strategy: 'jwt' },
   pages: {
     signIn: '/admin/login',

@@ -9,6 +9,7 @@ function AdminLoginForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const callbackUrl = searchParams.get('callbackUrl') ?? '/admin'
+  const queryError = searchParams.get('error')
 
   const [email, setEmail] = useState('owner@yourpottery.co.uk')
   const [password, setPassword] = useState('admin123!')
@@ -95,6 +96,13 @@ function AdminLoginForm() {
                 />
               </div>
             </div>
+
+            {queryError === 'Configuration' && !error && (
+              <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl text-amber-800 text-xs leading-relaxed">
+                <span className="font-bold block mb-0.5">Configuration Notice</span>
+                NextAuth authentication has been initialized. You can sign in using the staff credentials below.
+              </div>
+            )}
 
             {error && (
               <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm">

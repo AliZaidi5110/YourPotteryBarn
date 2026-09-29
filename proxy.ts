@@ -4,8 +4,13 @@ import { getToken } from 'next-auth/jwt'
 const ADMIN_PATHS = ['/admin']
 const AUTH_PATHS = ['/account']
 
+const NEXTAUTH_SECRET =
+  process.env.NEXTAUTH_SECRET ||
+  process.env.AUTH_SECRET ||
+  'your-pottery-barn-production-secret-2026-ypb-secure-jwt'
+
 export async function proxy(req: NextRequest) {
-  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET })
+  const token = await getToken({ req, secret: NEXTAUTH_SECRET })
   const { pathname } = req.nextUrl
 
   // Admin routes — require staff or owner
