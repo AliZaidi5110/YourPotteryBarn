@@ -84,12 +84,15 @@ model Customer {
   creditBalance Decimal  @default(0) @db.Decimal(10, 2)
   isVip         Boolean  @default(false)
   tags          String[] @default([])
+  wixContactId  String?  @unique // for Wix CSV import deduplication
+  notes         String?  // staff notes
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
   // Relations
   bookings      Booking[]
   giftCards     GiftCard[]
+  vouchers      Voucher[]
   notifications Notification[]
 
   @@map("customers")
@@ -121,6 +124,7 @@ model Booking {
   slot            AvailabilitySlot  @relation(fields: [slotId], references: [id])
   bookingAddons   BookingAddon[]
   payments        Payment[]
+  splitPayments   SplitPayment[]
   orderDeductions OrderDeduction[]
   notifications   Notification[]
 
@@ -270,6 +274,7 @@ model Payment {
 enum PaymentChannel {
   ONLINE
   TERMINAL
+  IN_STORE
 }
 
 enum PaymentProvider {
@@ -277,6 +282,8 @@ enum PaymentProvider {
   SHIFT4
   CREDIT
   GIFT_CARD
+  VOUCHER
+  CASH
 }
 
 enum PaymentStatus {
@@ -303,6 +310,62 @@ model GiftCard {
   issuedTo Customer? @relation(fields: [issuedToId], references: [id])
 
   @@map("gift_cards")
+}
+
+// ─── Vouchers (sold in-studio or online) ─────────────────────────────────────
+
+model Voucher {
+  id               String        @id @default(cuid())
+  code             String        @unique
+  type             VoucherType   @default(MONETARY)  // MONETARY | EXPERIENCE
+  title            String        // e.g. "Paint a Pot for Two"
+  initialValue     Decimal       @db.Decimal(10, 2)  // monetary or RRP
+  remainingValue   Decimal       @db.Decimal(10, 2)
+  issuedToId       String?
+  issuedToName     String?       // for non-registered recipients
+  issuedToEmail    String?
+  purchasedById    String?
+  purchasedByName  String?
+  paymentMethod    String?       // CASH | CARD | ONLINE
+  salePrice        Decimal?      @db.Decimal(10, 2)  // amount actually paid
+  expiryDate       DateTime?
+  active           Boolean       @default(true)
+  redeemedAt       DateTime?
+  redeemedBookingId String?
+  notes            String?
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  issuedTo         Customer?     @relation(fields: [issuedToId], references: [id])
+
+  @@map("vouchers")
+}
+
+enum VoucherType {
+  MONETARY
+  EXPERIENCE
+}
+
+// ─── Split Payments (multiple people paying for one booking) ──────────────────
+
+model SplitPayment {
+  id            String        @id @default(cuid())
+  bookingId     String
+  personName    String        // name of who is paying this split
+  personEmail   String?       // optional email for receipt
+  amount        Decimal       @db.Decimal(10, 2)
+  status        PaymentStatus @default(PENDING)
+  channel       PaymentChannel @default(TERMINAL)
+  provider      PaymentProvider @default(SHIFT4)
+  providerTxnId String?
+  notes         String?
+  paidAt        DateTime?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  booking       Booking       @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@map("split_payments")
 }
 
 // ─── Staff Users ──────────────────────────────────────────────────────────────

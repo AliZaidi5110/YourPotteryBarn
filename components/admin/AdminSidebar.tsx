@@ -5,22 +5,25 @@ import { usePathname } from 'next/navigation'
 import { signOut, useSession } from 'next-auth/react'
 import {
   LayoutDashboard, Calendar, ShoppingBag, CreditCard, Users,
-  Settings, BarChart3, UserCog, LogOut, ChevronLeft, ChevronRight, Menu, Bell
+  Settings, BarChart3, UserCog, LogOut, ChevronLeft, ChevronRight, Menu, Bell, Gift, FileText, Upload
 } from 'lucide-react'
 import { useState } from 'react'
 import { cn } from '@/lib/utils'
 
 const NAV_ITEMS = [
   { href: '/admin', icon: LayoutDashboard, label: 'Dashboard', exact: true },
-  { href: '/admin/calendar',  icon: Calendar,       label: 'Operations Calendar', badge: 'Wix' },
-  { href: '/admin/bookings',  icon: Users,          label: 'Bookings & Rosters' },
-  { href: '/admin/checkout',  icon: ShoppingBag,    label: 'POS Checkout',        badge: 'POS' },
-  { href: '/admin/notifications', icon: Bell,       label: 'Pottery Ready',       badge: 'Alerts' },
-  { href: '/admin/payments',  icon: CreditCard,     label: 'Payments' },
-  { href: '/admin/customers', icon: Users,          label: 'Customers' },
-  { href: '/admin/services',  icon: Settings,       label: 'Services & Add-ons' },
-  { href: '/admin/reports',   icon: BarChart3,      label: 'Reports' },
-  { href: '/admin/staff',     icon: UserCog,        label: 'Staff & Roles', ownerOnly: true },
+  { href: '/admin/calendar',        icon: Calendar,    label: 'Operations Calendar', badge: 'Wix' },
+  { href: '/admin/bookings',        icon: Users,       label: 'Bookings & Rosters' },
+  { href: '/admin/checkout',        icon: ShoppingBag, label: 'POS Checkout',        badge: 'POS' },
+  { href: '/admin/welcome-sheets',  icon: FileText,    label: 'Welcome Sheets',      badge: 'Print' },
+  { href: '/admin/notifications',   icon: Bell,        label: 'Pottery Ready',       badge: 'Alerts' },
+  { href: '/admin/payments',        icon: CreditCard,  label: 'Payments' },
+  { href: '/admin/vouchers',        icon: Gift,        label: 'Vouchers' },
+  { href: '/admin/customers',       icon: Users,       label: 'Customers' },
+  { href: '/admin/customers/import',icon: Upload,      label: 'Import from Wix' },
+  { href: '/admin/services',        icon: Settings,    label: 'Services & Add-ons' },
+  { href: '/admin/reports',         icon: BarChart3,   label: 'Reports & QuickBooks' },
+  { href: '/admin/staff',           icon: UserCog,     label: 'Staff & Roles', ownerOnly: true },
 ]
 
 export function AdminSidebar() {
