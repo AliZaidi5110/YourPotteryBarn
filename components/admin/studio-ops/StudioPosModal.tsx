@@ -3,7 +3,7 @@
 import { useState, useMemo } from 'react'
 import {
   X, Search, Plus, Minus, CreditCard, CheckCircle, Printer, Send,
-  Sparkles, AlertCircle, ShoppingBag, Receipt, ArrowRight, ShieldCheck, RefreshCw
+  Sparkles, AlertCircle, ShoppingBag, Receipt, ArrowRight, ShieldCheck, RefreshCw, Tag, Loader2
 } from 'lucide-react'
 import { SessionBooking, InventoryPotteryItem, PotteryOrderItem } from '@/lib/studio-ops/types'
 import { DEFAULT_POTTERY_INVENTORY } from '@/lib/studio-ops/data'
@@ -29,9 +29,15 @@ export function StudioPosModal({
   const [step, setStep] = useState<PosStep>(booking.orderCompleted ? 'success' : 'itemization')
   const [selectedCategory, setSelectedCategory] = useState<string>('All')
   const [searchQuery, setSearchQuery] = useState('')
-  const [paymentProvider, setPaymentProvider] = useState<'SHIFT4' | 'STRIPE' | 'CASH'>('SHIFT4')
+  const [paymentProvider, setPaymentProvider] = useState<'SHIFT4' | 'STRIPE' | 'CASH' | 'VOUCHER'>('SHIFT4')
   const [isProcessing, setIsProcessing] = useState(false)
   const [receiptData, setReceiptData] = useState<any>(null)
+
+  // Voucher state
+  const [voucherCode, setVoucherCode] = useState('')
+  const [voucherInfo, setVoucherInfo] = useState<{ code: string; title: string; remainingValue: number } | null>(null)
+  const [voucherError, setVoucherError] = useState('')
+  const [voucherValidating, setVoucherValidating] = useState(false)
 
   // Initialize selected items from existing booking or empty
   const [itemQuantities, setItemQuantities] = useState<Record<string, number>>(() => {
@@ -102,6 +108,27 @@ export function StudioPosModal({
     })
   }
 
+  // Validate a voucher code against the API
+  async function validateVoucher() {
+    if (!voucherCode.trim()) return
+    setVoucherValidating(true)
+    setVoucherError('')
+    setVoucherInfo(null)
+    try {
+      const res = await fetch(`/api/vouchers/validate?code=${encodeURIComponent(voucherCode.trim().toUpperCase())}`)
+      const data = await res.json()
+      if (data.valid) {
+        setVoucherInfo({ code: data.voucher.code, title: data.voucher.title, remainingValue: Number(data.voucher.remainingValue) })
+      } else {
+        setVoucherError(data.error ?? 'Invalid voucher')
+      }
+    } catch {
+      setVoucherError('Could not validate voucher. Check your connection.')
+    } finally {
+      setVoucherValidating(false)
+    }
+  }
+
   // Handle Checkout Action
   const handleCollectPayment = async () => {
     setIsProcessing(true)
@@ -120,6 +147,7 @@ export function StudioPosModal({
           depositDeducted: Math.min(depositPaid, grossTotal),
           balanceDue,
           paymentMethod: paymentProvider === 'SHIFT4' ? 'TERMINAL_SHIFT4' : paymentProvider,
+          voucherCode: paymentProvider === 'VOUCHER' ? voucherCode.trim().toUpperCase() : undefined,
         }),
       })
 
@@ -379,17 +407,23 @@ export function StudioPosModal({
                 {/* Payment Gateway / Provider Selector */}
                 {balanceDue > 0 && (
                   <div>
-                    <label className="text-xs font-semibold text-clay block mb-1.5">Payment Terminal / Channel</label>
-                    <div className="grid grid-cols-3 gap-2">
+                  <label className="text-xs font-semibold text-clay block mb-1.5">Payment Terminal / Channel</label>
+                    <div className="grid grid-cols-2 gap-2">
                       {[
                         { id: 'SHIFT4', label: 'Shift4 Card', icon: CreditCard },
                         { id: 'STRIPE', label: 'Stripe Reader', icon: CreditCard },
-                        { id: 'CASH', label: 'Cash / Split', icon: Receipt },
+                        { id: 'CASH',   label: 'Cash / Split', icon: Receipt },
+                        { id: 'VOUCHER',label: 'Voucher',      icon: Tag },
                       ].map(p => (
                         <button
                           key={p.id}
                           type="button"
-                          onClick={() => setPaymentProvider(p.id as any)}
+                          onClick={() => {
+                            setPaymentProvider(p.id as any)
+                            setVoucherInfo(null)
+                            setVoucherError('')
+                            setVoucherCode('')
+                          }}
                           className={`p-2 rounded-xl border text-xs font-medium flex flex-col items-center gap-1 transition-all ${
                             paymentProvider === p.id
                               ? 'border-terracotta bg-terracotta/10 text-terracotta font-bold'
@@ -401,6 +435,72 @@ export function StudioPosModal({
                         </button>
                       ))}
                     </div>
+
+                    {/* Voucher code input — shown only when Voucher selected */}
+                    {paymentProvider === 'VOUCHER' && (
+                      <div className="mt-3 space-y-2">
+                        <label className="text-xs font-semibold text-clay block">Enter Voucher Code</label>
+                        <div className="flex gap-2">
+                          <input
+                            type="text"
+                            value={voucherCode}
+                            onChange={e => {
+                              setVoucherCode(e.target.value.toUpperCase())
+                              setVoucherInfo(null)
+                              setVoucherError('')
+                            }}
+                            onKeyDown={e => e.key === 'Enter' && validateVoucher()}
+                            placeholder="YPB-XXXX-XXXX"
+                            className="flex-1 border border-parchment rounded-xl px-3 py-2 text-clay text-sm bg-cream focus:outline-none focus:ring-2 focus:ring-terracotta/30 font-mono tracking-widest uppercase"
+                          />
+                          <button
+                            type="button"
+                            onClick={validateVoucher}
+                            disabled={voucherValidating || voucherCode.length < 4}
+                            className="px-4 py-2 rounded-xl border border-terracotta text-terracotta text-xs font-semibold hover:bg-terracotta/10 transition-all disabled:opacity-40 flex items-center gap-1.5"
+                          >
+                            {voucherValidating ? <Loader2 size={13} className="animate-spin" /> : <Tag size={13} />}
+                            Check
+                          </button>
+                        </div>
+
+                        {/* Validation error */}
+                        {voucherError && (
+                          <div className="flex items-center gap-2 text-red-600 text-xs bg-red-50 rounded-xl px-3 py-2">
+                            <AlertCircle size={13} />
+                            {voucherError}
+                          </div>
+                        )}
+
+                        {/* Voucher confirmed */}
+                        {voucherInfo && (
+                          <div className="bg-sage/10 border border-sage/25 rounded-xl p-3 space-y-1">
+                            <div className="flex items-center gap-1.5 text-sage text-xs font-semibold">
+                              <CheckCircle size={13} />
+                              Valid Voucher
+                            </div>
+                            <p className="text-clay font-semibold text-sm">{voucherInfo.title}</p>
+                            <div className="grid grid-cols-2 gap-2 mt-1">
+                              <div className="bg-white rounded-lg p-2 text-center">
+                                <p className="text-[10px] text-clay-light uppercase tracking-wide">Voucher Balance</p>
+                                <p className="font-bold text-clay text-sm">{formatCurrency(voucherInfo.remainingValue)}</p>
+                              </div>
+                              <div className="bg-white rounded-lg p-2 text-center">
+                                <p className="text-[10px] text-clay-light uppercase tracking-wide">Will Apply</p>
+                                <p className="font-bold text-terracotta text-sm">
+                                  {formatCurrency(Math.min(voucherInfo.remainingValue, balanceDue))}
+                                </p>
+                              </div>
+                            </div>
+                            {voucherInfo.remainingValue < balanceDue && (
+                              <p className="text-[11px] text-amber-700 bg-amber-50 rounded-lg px-2 py-1 mt-1">
+                                ⚠️ Voucher covers {formatCurrency(voucherInfo.remainingValue)} of {formatCurrency(balanceDue)} due. Remaining {formatCurrency(balanceDue - voucherInfo.remainingValue)} payable by card/cash.
+                              </p>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -438,8 +538,14 @@ export function StudioPosModal({
               <CreditCard size={36} className="text-terracotta animate-pulse" />
             </div>
             <div>
-              <h3 className="font-playfair font-bold text-2xl text-clay">Contacting Shift4 Terminal...</h3>
-              <p className="text-sm text-clay-light mt-1">Please ask the customer to tap or insert card on the desk reader.</p>
+              <h3 className="font-playfair font-bold text-2xl text-clay">
+                {paymentProvider === 'VOUCHER' ? 'Processing Voucher...' : 'Contacting Shift4 Terminal...'}
+              </h3>
+              <p className="text-sm text-clay-light mt-1">
+                {paymentProvider === 'VOUCHER'
+                  ? `Redeeming voucher ${voucherCode} against this order.`
+                  : 'Please ask the customer to tap or insert card on the desk reader.'}
+              </p>
               <p className="text-xs font-mono font-bold text-terracotta mt-2 bg-terracotta/10 px-3 py-1 rounded-full inline-block">
                 Amount to charge: {formatCurrency(balanceDue)}
               </p>
@@ -493,12 +599,37 @@ export function StudioPosModal({
                   <span>Booking Credit Deducted</span>
                   <span>−{formatCurrency(Math.min(depositPaid, grossTotal))}</span>
                 </div>
+                {receiptData?.voucherApplied > 0 && (
+                  <div className="flex justify-between text-terracotta font-medium">
+                    <span>Voucher Applied ({receiptData.voucherCode})</span>
+                    <span>−{formatCurrency(receiptData.voucherApplied)}</span>
+                  </div>
+                )}
                 <div className="flex justify-between text-clay font-bold text-sm pt-1 border-t border-parchment">
                   <span>Amount Paid on Counter</span>
                   <span className="text-terracotta">{formatCurrency(balanceDue)}</span>
                 </div>
               </div>
             </div>
+
+            {/* Voucher remaining balance notice */}
+            {receiptData?.voucherCode && (
+              <div className={`w-full max-w-md rounded-xl border px-4 py-3 text-sm text-center ${
+                receiptData.voucherRemainingAfter > 0
+                  ? 'bg-amber-50 border-amber-200 text-amber-800'
+                  : 'bg-sage/10 border-sage/25 text-sage'
+              }`}>
+                {receiptData.voucherRemainingAfter > 0 ? (
+                  <>
+                    🎁 Voucher <span className="font-mono font-bold">{receiptData.voucherCode}</span> has <strong>{formatCurrency(receiptData.voucherRemainingAfter)}</strong> remaining — customer can use it again.
+                  </>
+                ) : (
+                  <>
+                    ✅ Voucher <span className="font-mono font-bold">{receiptData.voucherCode}</span> fully redeemed.
+                  </>
+                )}
+              </div>
+            )}
 
             {/* Receipt Print & Next Actions */}
             <div className="flex flex-wrap gap-3 justify-center w-full max-w-md">
