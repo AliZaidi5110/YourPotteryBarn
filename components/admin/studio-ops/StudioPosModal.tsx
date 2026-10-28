@@ -131,11 +131,16 @@ export function StudioPosModal({
 
   // Handle Checkout Action
   const handleCollectPayment = async () => {
+    if (balanceDue > 0 && paymentProvider === 'VOUCHER' && !voucherInfo) {
+      setVoucherError('Please check and validate a voucher code before proceeding.')
+      return
+    }
+
     setIsProcessing(true)
     setStep('terminal')
 
     try {
-      // Simulate POS terminal handshake (Shift4 / Stripe)
+      // Simulate POS terminal handshake (Shift4 / Stripe / Voucher)
       const res = await fetch('/api/admin/checkout-order', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -153,6 +158,10 @@ export function StudioPosModal({
 
       const data = await res.json()
 
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to process checkout')
+      }
+
       // Terminal animation delay for authentic feel
       setTimeout(() => {
         setIsProcessing(false)
@@ -162,10 +171,11 @@ export function StudioPosModal({
           onOrderSaved(data.booking)
         }
       }, 1500)
-    } catch (err) {
+    } catch (err: any) {
       console.error(err)
       setIsProcessing(false)
-      alert('Error connecting to terminal. Please try again.')
+      setStep('pos')
+      alert(err.message || 'Error processing payment. Please try again.')
     }
   }
 
@@ -509,12 +519,24 @@ export function StudioPosModal({
               <div className="pt-4 mt-4 border-t border-parchment space-y-2">
                 <button
                   onClick={handleCollectPayment}
-                  disabled={selectedLineItems.length === 0}
+                  disabled={selectedLineItems.length === 0 || (balanceDue > 0 && paymentProvider === 'VOUCHER' && !voucherInfo)}
                   className="btn-primary w-full py-3.5 text-base flex items-center justify-center gap-2 shadow-terracotta disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <CreditCard size={18} />
                   {balanceDue > 0 ? (
-                    <span>Collect Balance & Finish ({formatCurrency(balanceDue)})</span>
+                    paymentProvider === 'VOUCHER' ? (
+                      voucherInfo ? (
+                        voucherInfo.remainingValue >= balanceDue ? (
+                          <span>Redeem Voucher & Finish ({formatCurrency(balanceDue)})</span>
+                        ) : (
+                          <span>Apply Voucher ({formatCurrency(voucherInfo.remainingValue)}) & Finish</span>
+                        )
+                      ) : (
+                        <span>Check Voucher Code Above to Finish</span>
+                      )
+                    ) : (
+                      <span>Collect Balance & Finish ({formatCurrency(balanceDue)})</span>
+                    )
                   ) : (
                     <span>Settle & Mark Fulfilled (£0.00 Due)</span>
                   )}
