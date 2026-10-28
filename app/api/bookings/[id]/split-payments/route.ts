@@ -5,14 +5,15 @@ import { authOptions } from '@/lib/auth'
 import { z } from 'zod'
 
 // GET /api/bookings/[id]/split-payments - list all split payments for a booking
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const session = await getServerSession(authOptions)
   if (!session || !(session.user as any)?.isStaff) {
     return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
   }
 
   const booking = await prisma.booking.findUnique({
-    where: { id: params.id },
+    where: { id },
     include: {
       customer: true,
       service: true,
@@ -59,13 +60,14 @@ const CreateSplitSchema = z.object({
 })
 
 // POST /api/bookings/[id]/split-payments - create split payment entries
-export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const session = await getServerSession(authOptions)
   if (!session || !(session.user as any)?.isStaff) {
     return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
   }
 
-  const booking = await prisma.booking.findUnique({ where: { id: params.id } })
+  const booking = await prisma.booking.findUnique({ where: { id } })
   if (!booking) return NextResponse.json({ error: 'Booking not found' }, { status: 404 })
 
   const body = await req.json()
@@ -73,12 +75,12 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
 
   // Delete any existing PENDING splits before creating new set
   await prisma.splitPayment.deleteMany({
-    where: { bookingId: params.id, status: 'PENDING' },
+    where: { bookingId: id, status: 'PENDING' },
   })
 
   const created = await prisma.splitPayment.createMany({
     data: splits.map(s => ({
-      bookingId: params.id,
+      bookingId: id,
       personName: s.personName,
       personEmail: s.personEmail || null,
       amount: s.amount,

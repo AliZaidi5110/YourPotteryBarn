@@ -15,7 +15,8 @@ const PaySplitSchema = z.object({
 })
 
 // POST /api/bookings/[id]/split-payments/pay
-export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const session = await getServerSession(authOptions)
   if (!session || !(session.user as any)?.isStaff) {
     return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
@@ -31,7 +32,7 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
 
   if (!split) return NextResponse.json({ error: 'Split not found' }, { status: 404 })
   if (split.status === 'SUCCEEDED') return NextResponse.json({ error: 'Already paid' }, { status: 400 })
-  if (split.bookingId !== params.id) return NextResponse.json({ error: 'Split does not belong to this booking' }, { status: 400 })
+  if (split.bookingId !== id) return NextResponse.json({ error: 'Split does not belong to this booking' }, { status: 400 })
 
   const amountToPay = amountOverride ?? Number(split.amount)
 
@@ -43,12 +44,12 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
         data: { status: PaymentStatus.SUCCEEDED, provider: 'CASH', channel: 'IN_STORE', paidAt: new Date() },
       })
       // Update booking amountPaid
-      const booking = await tx.booking.findUnique({ where: { id: params.id } })
+      const booking = await tx.booking.findUnique({ where: { id } })
       if (booking) {
         const newPaid = Number(booking.amountPaid) + amountToPay
         const isFullyPaid = newPaid >= Number(booking.totalAmount)
         await tx.booking.update({
-          where: { id: params.id },
+          where: { id },
           data: { amountPaid: newPaid, status: isFullyPaid ? BookingStatus.PAID : BookingStatus.CONFIRMED },
         })
       }
@@ -70,7 +71,7 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
         data: {
           remainingValue: Number(voucher.remainingValue) - amountToPay,
           redeemedAt: new Date(),
-          redeemedBookingId: params.id,
+          redeemedBookingId: id,
           active: Number(voucher.remainingValue) - amountToPay <= 0 ? false : true,
         },
       })
@@ -78,12 +79,12 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
         where: { id: splitId },
         data: { status: PaymentStatus.SUCCEEDED, provider: 'VOUCHER', channel: 'IN_STORE', providerTxnId: voucherCode, paidAt: new Date() },
       })
-      const booking = await tx.booking.findUnique({ where: { id: params.id } })
+      const booking = await tx.booking.findUnique({ where: { id } })
       if (booking) {
         const newPaid = Number(booking.amountPaid) + amountToPay
         const isFullyPaid = newPaid >= Number(booking.totalAmount)
         await tx.booking.update({
-          where: { id: params.id },
+          where: { id },
           data: { amountPaid: newPaid, status: isFullyPaid ? BookingStatus.PAID : BookingStatus.CONFIRMED },
         })
       }
@@ -110,12 +111,12 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
           paidAt: new Date(),
         },
       })
-      const booking = await tx.booking.findUnique({ where: { id: params.id } })
+      const booking = await tx.booking.findUnique({ where: { id } })
       if (booking) {
         const newPaid = Number(booking.amountPaid) + amountToPay
         const isFullyPaid = newPaid >= Number(booking.totalAmount)
         await tx.booking.update({
-          where: { id: params.id },
+          where: { id },
           data: { amountPaid: newPaid, status: isFullyPaid ? BookingStatus.PAID : BookingStatus.CONFIRMED },
         })
       }

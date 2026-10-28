@@ -174,7 +174,7 @@ export function StudioPosModal({
     } catch (err: any) {
       console.error(err)
       setIsProcessing(false)
-      setStep('pos')
+      setStep('itemization')
       alert(err.message || 'Error processing payment. Please try again.')
     }
   }
