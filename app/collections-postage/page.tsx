@@ -33,10 +33,10 @@ export default function CollectionsPostagePage() {
             <div>
               <h2 className="font-playfair text-2xl font-bold text-clay mb-2">Kiln Firing Turnaround</h2>
               <p className="text-clay-light text-sm leading-relaxed mb-3">
-                Pottery painting pieces are clear-glazed and fired in our kiln up to 1000&deg;C. The drying, glazing, and kiln cycle takes approximately <strong>7 days</strong>.
+                Painted pottery and hand-built clay pieces are normally ready for collection after <strong>2 weeks</strong>.
               </p>
               <p className="text-clay-light text-sm leading-relaxed">
-                Clay hand-building and wheel throwing workshops require a thorough two-week drying and double-firing process (bisque firing + glaze firing).
+                Wheel-thrown pottery takes approximately <strong>3 weeks</strong>. Good things take a little time!
               </p>
             </div>
           </div>
@@ -48,7 +48,7 @@ export default function CollectionsPostagePage() {
             <div>
               <h2 className="font-playfair text-2xl font-bold text-clay mb-2">Studio Collection</h2>
               <p className="text-clay-light text-sm leading-relaxed mb-3">
-                You will receive a notification when your pieces are packed and ready for collection at our Hartley studio:
+                Please follow the collection information provided at your session. Collect your finished pieces from our Hartley studio:
               </p>
               <p className="text-clay font-medium text-sm">
                 Your Pottery Barn &bull; Hartley, Kent (What3Words: <a href="https://maps.app.goo.gl/2H9VXpmJTzNaU1qn9" target="_blank" rel="noopener noreferrer" className="text-terracotta underline">///bunk.apron.slides</a>)

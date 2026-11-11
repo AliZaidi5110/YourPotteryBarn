@@ -84,7 +84,7 @@ const GOOGLE_REVIEWS: Review[] = [
     date: '8 months ago',
     badge: 'Verified Guest',
     serviceTag: 'Creative Session',
-    text: 'What a beautiful place! The location is stunning, light, bright and airy, and the selection of items to paint and the colour choice is fab. We were very well looked after ❤️',
+    text: 'What a beautiful place! The location is stunning, light, bright and airy, and the selection of items to paint and the colour choice is fab. We were very well looked after ',
   },
   {
     id: 9,
@@ -142,7 +142,7 @@ export function TestimonialsSection() {
   return (
     <section id="testimonials" className="py-20 lg:py-28 bg-[#FAFAF8] relative overflow-hidden" aria-label="Customer Testimonials">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
+
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-14">
           <div className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/25 rounded-full px-4 py-1.5 mb-4">
@@ -156,16 +156,15 @@ export function TestimonialsSection() {
             </span>
           </div>
           <h2 className="font-playfair text-3xl sm:text-4xl lg:text-5xl font-bold text-clay mb-4">
-            Loved By Creative Minds Across Kent
+            From our visitors
           </h2>
           <p className="text-clay-light text-base sm:text-lg leading-relaxed">
-            Real feedback from beginners, families, and party-goers who joined us at the barn. 
-            All reviews verified via Google Business Profile.
+            Feedback from visitors who have spent time with us at the barn.
           </p>
         </div>
 
         {/* Main Showcase: Image with Reviews in Top Right */}
-        <div 
+        <div
           className="relative max-w-5xl mx-auto rounded-3xl overflow-hidden shadow-pottery-xl border border-parchment bg-warm-white"
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
@@ -173,8 +172,8 @@ export function TestimonialsSection() {
           {/* Base Image Container (Handcrafted pottery cups on shelf) */}
           <div className="relative w-full min-h-[460px] sm:min-h-[560px] lg:min-h-[640px]">
             <img
-              src="/images/testimonials/pottery-cups-shelf.jpg"
-              alt="Handcrafted ceramic cups and stoneware pottery on clean studio shelf at Your Pottery Barn"
+              src="/images/gallery/gallery-14.avif"
+              alt="Paints and refreshments on the counter inside Your Pottery Barn"
               className="absolute inset-0 w-full h-full object-cover object-left-bottom select-none pointer-events-none"
             />
             {/* Subtle soft gradient wash across top-right to guarantee card contrast */}
@@ -194,7 +193,7 @@ export function TestimonialsSection() {
             {/* Floating Review Card - Positioned in the Top-Right of the Image */}
             <div className="relative z-20 sm:absolute sm:top-4 sm:right-4 lg:top-6 lg:right-6 w-full max-w-[340px] sm:max-w-sm md:max-w-sm lg:max-w-[380px] mx-auto sm:mx-0 p-2 sm:p-0 pt-3 sm:pt-0">
               <div className="bg-warm-white/95 backdrop-blur-xl rounded-xl sm:rounded-2xl p-3.5 sm:p-5 border border-parchment shadow-pottery-xl transition-all duration-300">
-                
+
                 {/* Review Header: Google Badge & Service Tag */}
                 <div className="flex items-center justify-between gap-2 mb-2 pb-2 sm:mb-3 sm:pb-2.5 border-b border-parchment/80">
                   <div className="flex items-center gap-1.5">
@@ -226,7 +225,7 @@ export function TestimonialsSection() {
                 {/* Review Text Container with smooth fade transition */}
                 <div className="relative min-h-[60px] sm:min-h-[90px] flex items-center mb-2.5 sm:mb-3.5">
                   <Quote className="w-4 h-4 sm:w-5 sm:h-5 absolute -top-0.5 -left-0.5 text-terracotta/20 pointer-events-none" />
-                  <p 
+                  <p
                     className={`text-clay text-[11px] sm:text-[13px] leading-relaxed pl-3.5 sm:pl-4 transition-opacity duration-300 ${
                       isTransitioning ? 'opacity-0' : 'opacity-100'
                     }`}

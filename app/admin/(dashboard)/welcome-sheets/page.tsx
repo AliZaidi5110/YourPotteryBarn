@@ -1,5 +1,8 @@
 'use client'
 
+import { Star as ClientStar } from 'lucide-react'
+
+
 import { useState, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Printer, FileText, Loader2, Calendar, Users, ChevronDown } from 'lucide-react'
@@ -446,7 +449,7 @@ function GuestCard({
         textAlign: 'center',
       }}>
         <p style={{ margin: '0 0 0.5mm 0', fontSize: '7pt', textTransform: 'uppercase', letterSpacing: '1.5px', color: '#777' }}>
-          🎨 Your pottery is ready to collect on
+           Your pottery is ready to collect on
         </p>
         <p style={{
           margin: 0,
@@ -513,7 +516,7 @@ function GuestCard({
             fontSize: '18pt',
             flexShrink: 0,
           }}>
-            ⭐
+            <ClientStar size={16} aria-hidden="true" />
           </div>
         )}
       </div>

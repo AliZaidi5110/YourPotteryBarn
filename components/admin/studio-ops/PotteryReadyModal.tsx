@@ -40,12 +40,12 @@ export function PotteryReadyModal({
   // Default templates
   const TEMPLATES: Record<NotificationTemplateType, { title: string; message: string }> = {
     COLLECTION_READY: {
-      title: '✨ Your Pottery is Glazed, Fired & Ready for Collection!',
+      title: ' Your Pottery is Glazed, Fired & Ready for Collection!',
       message:
-        'Hi {name},\n\nGreat news! Your ceramic pieces from your workshop ({service}) on {sessionDate} have been carefully glazed, kiln-fired, and are now ready for collection at {studioAddress}!\n\nOur collection desk is open Wed–Sun, 10:00am – 5:00pm. Please have your booking reference {bookingRef} handy on arrival.\n\nWe cannot wait for you to see your finished artwork!\nWarm regards,\nYour Pottery Barn Team',
+        'Hi {name},\n\nGreat news! Your ceramic pieces from your workshop ({service}) on {sessionDate} have been carefully glazed, kiln-fired, and are now ready for collection at {studioAddress}!\n\nWe are open every Saturday, 10am – 5pm, and on selected weekdays, Sundays and evenings. Please check our online booking calendar for the latest opening times. Please have your booking reference {bookingRef} handy on arrival.\n\nWe cannot wait for you to see your finished artwork!\nWarm regards,\nYour Pottery Barn Team',
     },
     FIRING_DELAY: {
-      title: '⏳ Studio Kiln Update: Small Firing Delay for Your Pottery',
+      title: ' Studio Kiln Update: Small Firing Delay for Your Pottery',
       message:
         'Hi {name},\n\nA quick update regarding your pottery from {service} on {sessionDate}. Our high-temperature kiln cycle is taking an additional 48 hours for gradual, gentle cooling to ensure zero thermal cracking on your pieces.\n\nYour items will now be ready for collection starting this Friday at {studioAddress}. Quote ref {bookingRef} when popping in.\n\nThank you so much for your patience!\nYour Pottery Barn Team',
     },
@@ -147,7 +147,7 @@ export function PotteryReadyModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-clay/60 backdrop-blur-sm animate-fade-in">
       <div className="bg-warm-white w-full max-w-4xl h-[92vh] max-h-[820px] rounded-3xl shadow-pottery-xl flex flex-col overflow-hidden border border-parchment">
-        
+
         {/* Header */}
         <div className="px-6 py-4 border-b border-parchment flex items-center justify-between bg-cream/70">
           <div className="flex items-center gap-3">
@@ -171,10 +171,10 @@ export function PotteryReadyModal({
 
         {!isSent ? (
           <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 overflow-hidden">
-            
+
             {/* Left Col: Attendee Selector & Template Chooser (5 cols) */}
             <div className="lg:col-span-5 p-5 border-r border-parchment/60 flex flex-col overflow-y-auto bg-cream/20">
-              
+
               {/* Template Buttons */}
               <div className="space-y-2 mb-4">
                 <label className="text-xs font-bold text-clay uppercase tracking-wider block">
@@ -283,7 +283,7 @@ export function PotteryReadyModal({
                           </p>
                         </div>
                         <span className="font-mono text-[10px] bg-parchment px-1.5 py-0.5 rounded text-clay-light">
-                          {b.seats} 👤
+                          {b.seats}
                         </span>
                       </label>
                     )
@@ -295,7 +295,7 @@ export function PotteryReadyModal({
             {/* Right Col: Inline Text Editor & Live Preview (7 cols) */}
             <div className="lg:col-span-7 p-5 flex flex-col justify-between overflow-y-auto">
               <div className="space-y-4">
-                
+
                 {/* Subject line (Email) */}
                 <div>
                   <label className="text-xs font-semibold text-clay block mb-1">

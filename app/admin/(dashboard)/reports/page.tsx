@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { BarChart3, Download, Loader2, Package, TrendingUp, CreditCard, ChevronLeft, ChevronRight, RefreshCw } from 'lucide-react'
+import { Banknote, Globe, Gift, BarChart3, Download, Loader2, Package, TrendingUp, CreditCard, ChevronLeft, ChevronRight, RefreshCw } from 'lucide-react'
 import { formatCurrency } from '@/lib/utils'
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from 'recharts'
 
@@ -134,10 +134,10 @@ export default function ReportsPage() {
           {/* KPI Cards */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {[
-              { label: 'Total Revenue', value: formatCurrency(summary.totalRevenue ?? 0), icon: '💷', sub: 'all channels', color: 'text-terracotta' },
-              { label: 'Online (Stripe)', value: formatCurrency(summary.onlineRevenue ?? 0), icon: '🌐', sub: 'Stripe payments', color: 'text-blue-700' },
-              { label: 'Terminal (Shift4)', value: formatCurrency(summary.terminalRevenue ?? 0), icon: '🖥️', sub: 'card + cash in-store', color: 'text-terracotta' },
-              { label: 'Vouchers Sold', value: formatCurrency(summary.voucherRevenue ?? 0), icon: '🎁', sub: `${summary.vouchersSold ?? 0} vouchers`, color: 'text-sage' },
+              { label: 'Total Revenue', value: formatCurrency(summary.totalRevenue ?? 0), icon: <Banknote size={24} />, sub: 'all channels', color: 'text-terracotta' },
+              { label: 'Online (Stripe)', value: formatCurrency(summary.onlineRevenue ?? 0), icon: <Globe size={24} />, sub: 'Stripe payments', color: 'text-blue-700' },
+              { label: 'Terminal (Shift4)', value: formatCurrency(summary.terminalRevenue ?? 0), icon: <CreditCard size={24} />, sub: 'card + cash in-store', color: 'text-terracotta' },
+              { label: 'Vouchers Sold', value: formatCurrency(summary.voucherRevenue ?? 0), icon: <Gift size={24} />, sub: `${summary.vouchersSold ?? 0} vouchers`, color: 'text-sage' },
             ].map(k => (
               <div key={k.label} className="bg-warm-white rounded-2xl shadow-pottery border border-parchment/50 p-5">
                 <p className="text-2xl mb-2">{k.icon}</p>
@@ -150,7 +150,7 @@ export default function ReportsPage() {
 
           {/* QuickBooks Note */}
           <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4 flex items-start gap-3">
-            <span className="text-2xl">📊</span>
+            <BarChart3 size={24} className="shrink-0" aria-hidden="true" />
             <div>
               <p className="font-semibold text-blue-800 text-sm">QuickBooks Export Ready</p>
               <p className="text-blue-700 text-xs mt-1">
@@ -243,7 +243,7 @@ export default function ReportsPage() {
           {vouchersSold.length > 0 && (
             <div className="bg-warm-white rounded-2xl shadow-pottery border border-parchment/50 p-6">
               <h2 className="font-playfair font-semibold text-xl text-clay mb-4 flex items-center gap-2">
-                🎁 Vouchers Sold This Week
+                 Vouchers Sold This Week
               </h2>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">

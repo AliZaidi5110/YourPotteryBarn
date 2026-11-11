@@ -1,5 +1,8 @@
 'use client'
 
+import { Check as ClientCheck } from 'lucide-react'
+
+
 import { useState } from 'react'
 import { SiteHeader } from '@/components/customer/SiteHeader'
 import { SiteFooter } from '@/components/customer/SiteFooter'
@@ -28,13 +31,13 @@ export default function CelebrationsPage() {
     <>
       <SiteHeader />
       <main className="min-h-screen bg-cream">
-        
+
         {/* Hero Section with Celebration Sparklers Background */}
         <section className="relative py-20 sm:py-28 px-4 sm:px-6 lg:px-8 text-center text-warm-white overflow-hidden flex items-center justify-center">
           {/* Background Celebration Sparklers Image */}
           <div className="absolute inset-0 z-0 select-none pointer-events-none">
             <img
-              src="/images/celebrations/celebrations-hero-bg.jpg"
+              src="/images/gallery/gallery-1.avif"
               alt="Celebrations and private parties at Your Pottery Barn"
               className="w-full h-full object-cover object-center"
             />
@@ -60,38 +63,14 @@ export default function CelebrationsPage() {
 
         {/* Packages Cards with Birthday Decor Background */}
         <section className="relative py-16 px-4 sm:px-6 lg:px-8 overflow-hidden bg-[#FAFAF8]">
-          {/* Authentic Birthday Decor Backdrop - Perfectly proportioned, never squeezed */}
-          <div className="absolute inset-0 z-0 pointer-events-none select-none overflow-hidden">
-            {/* Left Party Decor: Party hat, grid mat, pastel lollipops */}
-            <div className="absolute -left-4 sm:left-0 top-12 sm:top-20 w-64 sm:w-80 md:w-96 lg:w-[460px] max-w-[40vw] opacity-90">
-              <img
-                src="/images/celebrations/party-decor-left.png"
-                alt="Birthday party hat and lollipops decor"
-                className="w-full h-auto object-contain drop-shadow-sm"
-              />
-            </div>
-
-            {/* Right Party Decor: Pink honeycomb paper ball, confetti, marshmallow, candles */}
-            <div className="absolute -right-4 sm:right-0 top-12 sm:top-20 w-64 sm:w-80 md:w-96 lg:w-[460px] max-w-[40vw] opacity-90">
-              <img
-                src="/images/celebrations/party-decor-right.png"
-                alt="Birthday party honeycomb and confetti decor"
-                className="w-full h-auto object-contain drop-shadow-sm"
-              />
-            </div>
-
-            {/* Soft background glow */}
-            <div className="absolute inset-0 bg-radial from-transparent via-white/40 to-[#FAFAF8]/90" />
-          </div>
-
           <div className="relative z-10 max-w-6xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-            
+
             {/* Gold Package */}
             <div className="bg-warm-white rounded-3xl p-8 sm:p-10 border border-parchment shadow-pottery flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-4">
-                  <span className="px-3.5 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-900 flex items-center gap-1.5">
+                  <span className="px-3.5 py-1 rounded-full text-xs font-bold bg-parchment text-clay flex items-center gap-1.5">
                     <Gift size={13} /> Gold Package
                   </span>
                   <span className="text-3xl font-bold font-playfair text-clay">
@@ -102,7 +81,7 @@ export default function CelebrationsPage() {
                   The Classic Party
                 </h2>
                 <p className="text-clay-light text-sm mb-6 leading-relaxed">
-                  A wonderful 2-hour session designed for 10 to 30 guests. Choose your ceramics, paint in your style, and enjoy complimentary refreshments and creative time together.
+                  A wonderful 2-hour session designed for 10 to 30 guests. Choose your ceramics, paint in your style, and enjoy English tea on the house and creative time together.
                 </p>
 
                 <ul className="space-y-3.5 text-sm text-clay mb-8">
@@ -124,7 +103,7 @@ export default function CelebrationsPage() {
                   </li>
                   <li className="flex items-start gap-3">
                     <Check size={18} className="text-terracotta shrink-0 mt-0.5" />
-                    <span><strong>Unlimited squash, tea &amp; coffee</strong> during session</span>
+                    <span><strong>English tea on the house; other drinks and snacks available to buy</strong> during session</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <Check size={18} className="text-terracotta shrink-0 mt-0.5" />
@@ -182,7 +161,7 @@ export default function CelebrationsPage() {
                   </li>
                   <li className="flex items-start gap-3">
                     <Check size={18} className="text-terracotta-light shrink-0 mt-0.5" />
-                    <span><strong>Unlimited squash, tea &amp; coffee</strong></span>
+                    <span><strong>English tea on the house; other drinks and snacks available to buy</strong></span>
                   </li>
                   <li className="flex items-start gap-3">
                     <Check size={18} className="text-terracotta-light shrink-0 mt-0.5" />
@@ -209,13 +188,13 @@ export default function CelebrationsPage() {
               <div className="md:col-span-5 relative group">
                 <div className="relative rounded-2xl overflow-hidden shadow-pottery border-2 border-parchment/60 aspect-[3/4] max-w-xs mx-auto">
                   <img
-                    src="/images/celebrations/party-balloon-arch.jpg"
-                    alt="Celebration party styling and balloon decor at Your Pottery Barn"
+                    src="/images/gallery/gallery-13.avif"
+                    alt="Children enjoying pottery painting together at Your Pottery Barn"
                     className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
                   />
                   <div className="absolute top-3 left-3 bg-warm-white/95 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold text-clay shadow-sm flex items-center gap-1.5">
                     <Sparkles size={12} className="text-terracotta" />
-                    <span>Party Styling &amp; Decor</span>
+                    <span>Time Together</span>
                   </div>
                 </div>
               </div>
@@ -226,16 +205,16 @@ export default function CelebrationsPage() {
                   <Gift size={13} /> Included In Every Celebration
                 </div>
                 <h3 className="font-playfair text-2xl sm:text-3xl font-bold text-clay mb-3">
-                  Festive Party Atmosphere &amp; Celebration Styling
+                  Celebrate Together at the Barn
                 </h3>
                 <p className="text-clay-light text-sm sm:text-base leading-relaxed mb-6">
-                  Every party booking includes dedicated party styling and reserved tables for your group. Enjoy quality creative time with friends and family during your pottery painting session!
+                  Reserve tables for your group and spend time making pottery together. Enjoy quality creative time with friends and family during your pottery painting session!
                 </p>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 mb-6 text-sm text-clay">
                   <div className="flex items-start gap-2.5">
                     <Check size={16} className="text-terracotta shrink-0 mt-0.5" />
-                    <span><strong>Festive Party Decor</strong> &amp; dedicated group tables</span>
+                    <span><strong>Pottery Painting</strong> &amp; dedicated group tables</span>
                   </div>
                   <div className="flex items-start gap-2.5">
                     <Check size={16} className="text-terracotta shrink-0 mt-0.5" />
@@ -243,11 +222,11 @@ export default function CelebrationsPage() {
                   </div>
                   <div className="flex items-start gap-2.5">
                     <Check size={16} className="text-terracotta shrink-0 mt-0.5" />
-                    <span><strong>Bring Your Birthday Cake</strong> (tea &amp; squash on us)</span>
+                    <span><strong>Food by prior arrangement</strong> for exclusive private bookings</span>
                   </div>
                   <div className="flex items-start gap-2.5">
                     <Check size={16} className="text-terracotta shrink-0 mt-0.5" />
-                    <span><strong>Glazed &amp; Kiln-Fired</strong> ready to collect in 1 week</span>
+                    <span><strong>Glazed &amp; Kiln-Fired</strong> normally ready to collect after 2 weeks</span>
                   </div>
                 </div>
 
@@ -281,7 +260,7 @@ export default function CelebrationsPage() {
             {submitted ? (
               <div className="text-center py-10 space-y-4">
                 <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto text-3xl">
-                  ✓
+                  <ClientCheck size={22} aria-hidden="true" />
                 </div>
                 <h4 className="font-playfair text-2xl font-bold text-clay">Enquiry Received!</h4>
                 <p className="text-clay-light text-sm max-w-md mx-auto">
@@ -369,7 +348,7 @@ export default function CelebrationsPage() {
                     <input
                       type="number"
                       min="5"
-                      max="40"
+                      max="30"
                       value={formData.guests}
                       onChange={e => setFormData({ ...formData, guests: e.target.value })}
                       className="input-field text-sm"
@@ -416,14 +395,14 @@ export default function CelebrationsPage() {
               <div className="bg-warm-white p-6 rounded-2xl border border-parchment">
                 <h4 className="font-semibold text-clay mb-2">When will our painted items be ready?</h4>
                 <p className="text-clay-light text-xs sm:text-sm leading-relaxed">
-                  All painted pieces are professionally glazed and kiln-fired on site. They are ready for collection approximately 1 week after your party.
+                  All painted pieces are professionally glazed and kiln-fired on site. They are ready for collection approximately 2 weeks after your party.
                 </p>
               </div>
 
               <div className="bg-warm-white p-6 rounded-2xl border border-parchment">
                 <h4 className="font-semibold text-clay mb-2">Can we bring our own birthday cake?</h4>
                 <p className="text-clay-light text-xs sm:text-sm leading-relaxed">
-                  Yes! You are welcome to bring a birthday cake or party snacks. We provide unlimited squash, tea, and coffee for all attendees.
+                  Outside food is not permitted during regular shared sessions. For exclusive private bookings, you may bring your own food by prior arrangement. We sell a selection of drinks and snacks but English tea is always on the house!
                 </p>
               </div>
 
@@ -437,7 +416,7 @@ export default function CelebrationsPage() {
               <div className="bg-warm-white p-6 rounded-2xl border border-parchment">
                 <h4 className="font-semibold text-clay mb-2">Do you accommodate smaller private groups?</h4>
                 <p className="text-clay-light text-xs sm:text-sm leading-relaxed">
-                  If you have fewer than 16 attendees but require exclusive use, give us a call at 07809 208786 &mdash; we love creating bespoke packages.
+                  Exclusive private bookings require a minimum of 16 guests or a £400 minimum booking value. Please contact us on 07809 208786 to discuss your group.
                 </p>
               </div>
             </div>

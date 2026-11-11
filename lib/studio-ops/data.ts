@@ -1,3 +1,4 @@
+import { SERVICE_CATALOG } from '../service-details'
 import { StudioSession, SessionBooking, InventoryPotteryItem, StudioNotification, PotteryOrderItem } from './types'
 
 // ─── Default Pottery Inventory Catalog ───────────────────────────────────────
@@ -30,17 +31,10 @@ export const DEFAULT_POTTERY_INVENTORY: InventoryPotteryItem[] = [
 ]
 
 // ─── Studio Services Catalog (Browser-Safe) ─────────────────────────────────
-export const STUDIO_SERVICES_CATALOG = [
-  { id: 'srv-1', name: 'Pick & Paint (All Ages)', category: 'Paint' as const, price: 12.00, duration: 120, capacity: 20 },
-  { id: 'srv-2', name: 'Adults Only Pick & Paint (BYOB)', category: 'Paint' as const, price: 12.00, duration: 120, capacity: 16 },
-  { id: 'srv-3', name: 'Beginners Pottery Throwing Workshop', category: 'Throwing' as const, price: 60.00, duration: 120, capacity: 8 },
-  { id: 'srv-4', name: 'Clay Session – Charcuterie Board', category: 'Clay' as const, price: 40.00, duration: 90, capacity: 10 },
-  { id: 'srv-5', name: 'Clay Session – Tree OR Angel Luminaries', category: 'Clay' as const, price: 25.00, duration: 90, capacity: 12 },
-  { id: 'srv-6', name: 'Wreath Making Workshop', category: 'Seasonal' as const, price: 45.00, duration: 120, capacity: 12 },
-  { id: 'srv-7', name: 'Clay Session – Christmas Tree Decs', category: 'Seasonal' as const, price: 25.00, duration: 90, capacity: 14 },
-  { id: 'srv-8', name: 'Christmassy Pick & Paint', category: 'Seasonal' as const, price: 16.00, duration: 120, capacity: 20 },
-  { id: 'srv-9', name: 'Ukulele Fun & Music', category: 'Music' as const, price: 10.00, duration: 60, capacity: 15 },
-]
+export const STUDIO_SERVICES_CATALOG = SERVICE_CATALOG.map(service => ({
+  id: String(service.id), name: service.name, category: service.category, price: service.price,
+  duration: service.durationMinutes, capacity: service.maxCapacity,
+}))
 
 // ─── Staff & Locations ───────────────────────────────────────────────────────
 export const STUDIO_STAFF = [
@@ -592,7 +586,7 @@ function createInitialNotifications(): StudioNotification[] {
       recipient: 'c.taylor@glazemail.com',
       channel: 'EMAIL',
       type: 'COLLECTION_READY',
-      title: 'Your Pottery is Ready for Collection! ✨',
+      title: 'Your Pottery is Ready for Collection! ',
       message: 'Hi Charlotte, your pottery from Clay Session – Charcuterie Board has been glazed, fired, and is ready for collection at Your Pottery Barn! Collection hours: Wed-Sun 10am-5pm. Ref: YPB-CHARC-1',
       sentAt: 'Today at 09:30 AM',
       status: 'DELIVERED',

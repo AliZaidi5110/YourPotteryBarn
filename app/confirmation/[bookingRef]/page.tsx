@@ -137,7 +137,7 @@ export default async function ConfirmationPage({ params }: Props) {
                   <span className="font-semibold">{formatCurrency(Number(booking.totalAmount))}</span>
                 </div>
                 <div className="flex justify-between text-sage">
-                  <span>Paid (deposit)</span>
+                  <span>Paid online</span>
                   <span className="font-semibold">−{formatCurrency(Number(booking.amountPaid))}</span>
                 </div>
                 {amountRemaining > 0 && (
@@ -170,9 +170,10 @@ export default async function ConfirmationPage({ params }: Props) {
 
           {/* What to bring */}
           <div className="bg-sage/10 rounded-2xl border border-sage/20 p-5 mb-4">
-            <h3 className="font-semibold text-sage mb-3">📋 What to bring</h3>
+            <h3 className="font-semibold text-sage mb-3"> What to bring</h3>
             <ul className="text-sm text-sage/80 space-y-1.5">
               <li>• Clothes you don&apos;t mind getting a little messy</li>
+              {booking.service.name.includes('Throwing') && <li>• Come wearing trousers and short nails will make the process a whole lot easier!</li>}
               <li>• Your booking reference or this page</li>
               {amountRemaining > 0 && <li>• {formatCurrency(amountRemaining)} balance (card/cash accepted)</li>}
             </ul>

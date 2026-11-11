@@ -2,7 +2,7 @@ import { prisma } from '@/lib/prisma'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { formatCurrency } from '@/lib/utils'
-import { Calendar, CreditCard, Users, AlertTriangle, TrendingUp, Clock } from 'lucide-react'
+import { Calendar, CreditCard, Users, AlertTriangle, TrendingUp, Clock, Bell } from 'lucide-react'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = { title: 'Dashboard' }
@@ -70,7 +70,7 @@ export default async function AdminDashboard() {
       {/* Header */}
       <div>
         <h1 className="font-playfair text-3xl font-bold text-clay">
-          Good {getGreeting()}, {session?.user?.name?.split(' ')[0] ?? 'there'} 👋
+          Good {getGreeting()}, {session?.user?.name?.split(' ')[0] ?? 'there'}
         </h1>
         <p className="text-clay-light mt-1">
           {new Date().toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
@@ -160,10 +160,10 @@ export default async function AdminDashboard() {
           </div>
           <div className="grid grid-cols-2 gap-3">
             {[
-              { href: '/admin/calendar',      label: 'Ops Calendar',   icon: '📅', desc: 'Wix timetable & roster' },
-              { href: '/admin/checkout',      label: 'POS Checkout',   icon: '💳', desc: 'Itemize & collect balance' },
-              { href: '/admin/notifications', label: 'Pottery Ready',  icon: '📢', desc: 'Dispatch SMS & Email' },
-              { href: '/admin/customers',     label: 'Customers CRM',  icon: '👥', desc: 'Profiles & balances' },
+              { href: '/admin/calendar',      label: 'Ops Calendar',   icon: <Calendar size={24} />, desc: 'Wix timetable & roster' },
+              { href: '/admin/checkout',      label: 'POS Checkout',   icon: <CreditCard size={24} />, desc: 'Itemize & collect balance' },
+              { href: '/admin/notifications', label: 'Pottery Ready',  icon: <Bell size={24} />, desc: 'Dispatch SMS & Email' },
+              { href: '/admin/customers',     label: 'Customers CRM',  icon: <Users size={24} />, desc: 'Profiles & balances' },
             ].map(action => (
               <a
                 key={action.href}

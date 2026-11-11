@@ -75,8 +75,8 @@ export default function GiftCardsPage() {
           {/* Background Gift Card Presentation Image */}
           <div className="absolute inset-0 z-0 select-none pointer-events-none">
             <img
-              src="/images/gift-cards/gift-card-hero.jpg"
-              alt="Gift card presentation box at Your Pottery Barn"
+              src="/images/gallery/gallery-3.avif"
+              alt="A young visitor enjoying pottery painting at Your Pottery Barn"
               className="w-full h-full object-cover object-center"
             />
             {/* Atmospheric overlay to blend with brand clay palette and ensure pristine text contrast */}

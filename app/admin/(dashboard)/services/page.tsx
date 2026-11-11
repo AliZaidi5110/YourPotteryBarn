@@ -3,6 +3,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { formatCurrency } from '@/lib/utils'
+import { CategoryIcon } from '@/components/customer/CategoryIcon'
 import { Plus, Edit3, Eye, EyeOff, Loader2, Save, X } from 'lucide-react'
 
 interface Service {
@@ -79,7 +80,7 @@ export default function ServicesPage() {
             onClick={() => setActiveTab(tab)}
             className={`px-5 py-2.5 text-sm font-medium border-b-2 -mb-px transition-all ${activeTab === tab ? 'border-terracotta text-terracotta' : 'border-transparent text-clay-light hover:text-clay'}`}
           >
-            {tab === 'services' ? '🏺 Workshops' : '🍵 Products & Drinks'}
+            {tab === 'services' ? ' Workshops' : ' Products & Drinks'}
           </button>
         ))}
       </div>
@@ -234,6 +235,5 @@ function FormField({ label, value, onChange, type = 'text', multiline = false }:
 }
 
 function getCategoryIcon(cat: string) {
-  const icons: Record<string, string> = { Paint: '🎨', Clay: '🏺', Throwing: '⚡', Seasonal: '🍂', Music: '🎵' }
-  return icons[cat] ?? '🏺'
+  return <CategoryIcon category={cat} size={24} />
 }

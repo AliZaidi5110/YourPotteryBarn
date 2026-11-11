@@ -10,15 +10,15 @@ const config: Config = {
     extend: {
       colors: {
         terracotta: {
-          DEFAULT: '#C4613A',
-          dark: '#A04E2D',
-          light: '#F0C4A8',
-          pale: '#FDF0E8',
+          DEFAULT: '#665044',
+          dark: '#4C3B32',
+          light: '#D8C9B8',
+          pale: '#F2EDE6',
         },
         clay: {
-          DEFAULT: '#5C3D2E',
-          light: '#8B6147',
-          lighter: '#B8916E',
+          DEFAULT: '#44372F',
+          light: '#6D5D50',
+          lighter: '#A49482',
         },
         sage: {
           DEFAULT: '#4A7C59',
@@ -44,11 +44,11 @@ const config: Config = {
         '3xl': '32px',
       },
       boxShadow: {
-        'pottery-sm': '0 1px 3px rgba(92,61,46,0.08), 0 1px 2px rgba(92,61,46,0.06)',
-        'pottery':    '0 4px 16px rgba(92,61,46,0.10), 0 2px 6px rgba(92,61,46,0.06)',
-        'pottery-lg': '0 8px 32px rgba(92,61,46,0.14), 0 4px 12px rgba(92,61,46,0.08)',
-        'pottery-xl': '0 20px 60px rgba(92,61,46,0.18)',
-        'terracotta': '0 4px 16px rgba(196,97,58,0.3)',
+        'pottery-sm': '0 1px 3px rgba(68,55,47,0.08), 0 1px 2px rgba(68,55,47,0.06)',
+        'pottery':    '0 4px 16px rgba(68,55,47,0.10), 0 2px 6px rgba(68,55,47,0.06)',
+        'pottery-lg': '0 8px 32px rgba(68,55,47,0.14), 0 4px 12px rgba(68,55,47,0.08)',
+        'pottery-xl': '0 20px 60px rgba(68,55,47,0.18)',
+        'terracotta': '0 4px 16px rgba(102,80,68,0.3)',
       },
       animation: {
         'fade-in':    'fadeIn 0.5s ease forwards',
@@ -72,10 +72,10 @@ const config: Config = {
         },
       },
       backgroundImage: {
-        'pottery-gradient': 'linear-gradient(135deg, #C4613A 0%, #A04E2D 100%)',
+        'pottery-gradient': 'linear-gradient(135deg, #665044 0%, #4C3B32 100%)',
         'sage-gradient':    'linear-gradient(135deg, #4A7C59 0%, #2D5A3D 100%)',
         'cream-gradient':   'linear-gradient(180deg, #FAF7F0 0%, #F0EAD6 100%)',
-        'clay-gradient':    'linear-gradient(135deg, #5C3D2E 0%, #3D2218 100%)',
+        'clay-gradient':    'linear-gradient(135deg, #44372F 0%, #3D2218 100%)',
         'warm-gradient':    'linear-gradient(135deg, #FAF7F0 0%, #E8DCC8 100%)',
       },
     },

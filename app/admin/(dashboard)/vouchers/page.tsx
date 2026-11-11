@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { Gift, Plus, Search, CheckCircle, XCircle, Loader2, Tag, Download, RefreshCw } from 'lucide-react'
+import { Gift, Banknote, Clock, Plus, Search, CheckCircle, XCircle, Loader2, Tag, Download, RefreshCw } from 'lucide-react'
 import { formatCurrency } from '@/lib/utils'
 
 interface Voucher {
@@ -80,7 +80,7 @@ export default function VouchersPage() {
       // Reset form
       setForm(prev => ({ ...prev, issuedToName: '', issuedToEmail: '', purchasedByName: '', notes: '' }))
       // Show the generated code
-      alert(`✅ Voucher created!\n\nCode: ${data.voucher.code}\n\nGive this code to the customer.`)
+      alert(` Voucher created!\n\nCode: ${data.voucher.code}\n\nGive this code to the customer.`)
     },
     onError: (err: any) => alert(`Error: ${err.message}`),
   })
@@ -137,9 +137,9 @@ export default function VouchersPage() {
       {/* Stats */}
       <div className="grid grid-cols-3 gap-4">
         {[
-          { label: 'Vouchers Sold', value: String(totalSold), icon: '🎁', sub: 'all time' },
-          { label: 'Revenue Taken', value: formatCurrency(totalRevenue), icon: '💷', sub: 'from voucher sales' },
-          { label: 'Outstanding Balance', value: formatCurrency(totalOutstanding), icon: '⏳', sub: 'unredeemed value' },
+          { label: 'Vouchers Sold', value: String(totalSold), icon: <Gift size={24} />, sub: 'all time' },
+          { label: 'Revenue Taken', value: formatCurrency(totalRevenue), icon: <Banknote size={24} />, sub: 'from voucher sales' },
+          { label: 'Outstanding Balance', value: formatCurrency(totalOutstanding), icon: <Clock size={24} />, sub: 'unredeemed value' },
         ].map(s => (
           <div key={s.label} className="bg-warm-white rounded-2xl shadow-pottery border border-parchment/50 p-5">
             <p className="text-2xl mb-1">{s.icon}</p>

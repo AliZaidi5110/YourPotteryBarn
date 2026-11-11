@@ -182,7 +182,7 @@ export function StudioPosModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-clay/60 backdrop-blur-sm animate-fade-in">
       <div className="bg-warm-white w-full max-w-5xl h-[92vh] max-h-[850px] rounded-3xl shadow-pottery-xl flex flex-col overflow-hidden border border-parchment">
-        
+
         {/* Modal Header */}
         <div className="px-6 py-4 border-b border-parchment flex items-center justify-between bg-cream/70">
           <div className="flex items-center gap-3">
@@ -233,7 +233,7 @@ export function StudioPosModal({
         {/* Content Body */}
         {step === 'itemization' && (
           <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 overflow-hidden">
-            
+
             {/* Left Column: Pottery Item Catalog (8 cols) */}
             <div className="lg:col-span-7 xl:col-span-7 p-5 flex flex-col overflow-hidden border-r border-parchment/60">
               {/* Filter bar */}
@@ -304,7 +304,7 @@ export function StudioPosModal({
                         <span className="text-[10px] text-clay-lighter font-mono">
                           Stock: {item.stock}
                         </span>
-                        
+
                         <div className="flex items-center gap-1.5">
                           {qty > 0 && (
                             <>
@@ -504,7 +504,7 @@ export function StudioPosModal({
                             </div>
                             {voucherInfo.remainingValue < balanceDue && (
                               <p className="text-[11px] text-amber-700 bg-amber-50 rounded-lg px-2 py-1 mt-1">
-                                ⚠️ Voucher covers {formatCurrency(voucherInfo.remainingValue)} of {formatCurrency(balanceDue)} due. Remaining {formatCurrency(balanceDue - voucherInfo.remainingValue)} payable by card/cash.
+                                 Voucher covers {formatCurrency(voucherInfo.remainingValue)} of {formatCurrency(balanceDue)} due. Remaining {formatCurrency(balanceDue - voucherInfo.remainingValue)} payable by card/cash.
                               </p>
                             )}
                           </div>
@@ -643,11 +643,11 @@ export function StudioPosModal({
               }`}>
                 {receiptData.voucherRemainingAfter > 0 ? (
                   <>
-                    🎁 Voucher <span className="font-mono font-bold">{receiptData.voucherCode}</span> has <strong>{formatCurrency(receiptData.voucherRemainingAfter)}</strong> remaining — customer can use it again.
+                     Voucher <span className="font-mono font-bold">{receiptData.voucherCode}</span> has <strong>{formatCurrency(receiptData.voucherRemainingAfter)}</strong> remaining — customer can use it again.
                   </>
                 ) : (
                   <>
-                    ✅ Voucher <span className="font-mono font-bold">{receiptData.voucherCode}</span> fully redeemed.
+                     Voucher <span className="font-mono font-bold">{receiptData.voucherCode}</span> fully redeemed.
                   </>
                 )}
               </div>

@@ -1,5 +1,8 @@
 'use client'
 
+import { Star as ClientStar } from 'lucide-react'
+
+
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 import { formatCurrency, formatDate } from '@/lib/utils'
@@ -111,7 +114,7 @@ export default function CustomersPage() {
                           className={`text-lg ${c.isVip ? 'text-yellow-500' : 'text-gray-300 hover:text-yellow-400'} transition-colors`}
                           aria-label={c.isVip ? 'Remove VIP status' : 'Mark as VIP'}
                         >
-                          ⭐
+                          <ClientStar size={16} aria-hidden="true" />
                         </button>
                       </td>
                     </tr>
@@ -148,7 +151,7 @@ export default function CustomersPage() {
                 <div className="flex justify-between">
                   <span className="text-clay-light">Status</span>
                   <span className={selectedCustomer.isVip ? 'text-yellow-600 font-semibold' : 'text-clay-light'}>
-                    {selectedCustomer.isVip ? '⭐ VIP' : 'Standard'}
+                    {selectedCustomer.isVip ? ' VIP' : 'Standard'}
                   </span>
                 </div>
               </div>

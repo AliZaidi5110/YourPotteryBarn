@@ -2,40 +2,24 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
-import { Clock, Users, ArrowRight, Star } from 'lucide-react'
+import { CategoryIcon } from './CategoryIcon'
+import { Clock, Users, ArrowRight, Search } from 'lucide-react'
 import { formatCurrency } from '@/lib/utils'
 import type { Service } from '@prisma/client'
 
-const CATEGORY_ICONS: Record<string, string> = {
-  Paint: '🎨',
-  Clay: '🏺',
-  Throwing: '⚡',
-  Seasonal: '🍂',
-  Music: '🎵',
-}
 
 const CATEGORY_COLORS: Record<string, string> = {
-  Paint: 'bg-blue-50 text-blue-700 border-blue-200',
+  Paint: 'bg-warm-white/95 text-clay border-parchment',
   Clay: 'bg-terracotta/10 text-terracotta border-terracotta/20',
-  Throwing: 'bg-purple-50 text-purple-700 border-purple-200',
+  Throwing: 'bg-warm-white/95 text-clay border-parchment',
   Seasonal: 'bg-sage/10 text-sage border-sage/20',
-  Music: 'bg-yellow-50 text-yellow-700 border-yellow-200',
+  Music: 'bg-warm-white/95 text-clay border-parchment',
 }
 
-const SERVICE_PLACEHOLDERS: Record<string, string> = {
-  Paint: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=600&q=80',
-  Clay: 'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=600&q=80',
-  Throwing: 'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=600&q=80',
-  Seasonal: 'https://images.unsplash.com/photo-1511895426328-dc8714191011?w=600&q=80',
-  Music: 'https://images.unsplash.com/photo-1510915361894-db8b60106cb1?w=600&q=80',
-}
 
 interface ServiceGridProps {
   services: Service[]
 }
-
-const ALL_CATEGORIES = ['All', 'Paint', 'Clay', 'Throwing', 'Seasonal', 'Music']
 
 export function ServiceGrid({ services }: ServiceGridProps) {
   const [activeCategory, setActiveCategory] = useState('All')
@@ -75,7 +59,7 @@ export function ServiceGrid({ services }: ServiceGridProps) {
               }
             `}
           >
-            {cat !== 'All' && <span className="mr-1.5">{CATEGORY_ICONS[cat]}</span>}
+            {cat !== 'All' && <CategoryIcon category={cat} size={15} className="inline mr-1.5" />}
             {cat}
           </button>
         ))}
@@ -94,7 +78,7 @@ export function ServiceGrid({ services }: ServiceGridProps) {
 
       {filtered.length === 0 && (
         <div className="text-center py-20 text-clay-light">
-          <div className="text-6xl mb-4">🔍</div>
+          <Search size={40} className="mx-auto mb-4" aria-hidden="true" />
           <p className="text-lg">No workshops in this category right now.</p>
         </div>
       )}
@@ -107,24 +91,24 @@ function ServiceCard({ service, index }: { service: Service; index: number }) {
     ? `${service.durationMinutes / 60}hr${service.durationMinutes / 60 !== 1 ? 's' : ''}`
     : `${service.durationMinutes}min`
 
-  const imgSrc = service.imageUrl ?? SERVICE_PLACEHOLDERS[service.category] ?? SERVICE_PLACEHOLDERS.Clay
+  const imgSrc = service.imageUrl
 
   return (
     <article
-      className="group bg-warm-white rounded-2xl overflow-hidden shadow-pottery hover:shadow-pottery-lg card-hover border border-parchment/50"
+      className="group flex flex-col bg-warm-white rounded-2xl overflow-hidden shadow-pottery hover:shadow-pottery-lg card-hover border border-parchment/50"
       style={{ animationDelay: `${index * 0.05}s` }}
     >
       {/* Image */}
-      <div className="relative h-48 overflow-hidden bg-parchment">
-        <img
+      <div className={`relative overflow-hidden bg-cream ${imgSrc ? 'h-48' : 'h-20'}`}>
+        {imgSrc ? <img
           src={imgSrc}
           alt={service.name}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           loading="lazy"
-        />
+        /> : null}
         {/* Category badge */}
         <div className={`absolute top-3 left-3 flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border backdrop-blur-sm ${CATEGORY_COLORS[service.category] ?? 'bg-white/80 text-clay border-parchment'}`}>
-          <span>{CATEGORY_ICONS[service.category] ?? '🏺'}</span>
+          <CategoryIcon category={service.category} size={14} />
           {service.category}
         </div>
         {/* Price bubble */}
@@ -134,11 +118,11 @@ function ServiceCard({ service, index }: { service: Service; index: number }) {
       </div>
 
       {/* Content */}
-      <div className="p-5">
+      <div className="p-5 flex flex-col flex-1">
         <h3 className="font-playfair font-semibold text-xl text-clay mb-2 line-clamp-2 group-hover:text-terracotta transition-colors">
           {service.name}
         </h3>
-        <p className="text-clay-light text-sm line-clamp-2 mb-4 leading-relaxed">
+        <p className="text-clay-light text-sm mb-4 leading-relaxed">
           {service.description}
         </p>
 
@@ -152,16 +136,12 @@ function ServiceCard({ service, index }: { service: Service; index: number }) {
             <Users size={13} aria-hidden="true" />
             Up to {service.maxCapacity} people
           </span>
-          <span className="flex items-center gap-1 text-yellow-600">
-            <Star size={12} fill="currentColor" aria-hidden="true" />
-            5.0
-          </span>
         </div>
 
         {/* CTA */}
         <Link
           href={`/book/${service.id}`}
-          className="flex items-center justify-between w-full bg-terracotta/10 hover:bg-terracotta text-terracotta hover:text-warm-white rounded-xl px-4 py-3 text-sm font-semibold transition-all duration-200 group/btn"
+          className="mt-auto flex items-center justify-between w-full bg-terracotta/10 hover:bg-terracotta text-terracotta hover:text-warm-white rounded-xl px-4 py-3 text-sm font-semibold transition-all duration-200 group/btn"
           aria-label={`Book ${service.name} — ${formatCurrency(Number(service.price))} per person`}
         >
           <span>Book this session</span>

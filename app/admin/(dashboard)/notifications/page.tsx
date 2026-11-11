@@ -80,7 +80,7 @@ export default function NotificationsPage() {
 
       {/* Grid: Ready Sessions & Dispatch History */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        
+
         {/* Left Column: Workshop Sessions Ready for Notification (7 cols) */}
         <div className="lg:col-span-7 space-y-4">
           <div className="bg-warm-white rounded-3xl p-6 border border-parchment shadow-pottery space-y-4">

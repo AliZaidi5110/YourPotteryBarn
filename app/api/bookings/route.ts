@@ -1,3 +1,4 @@
+import { amountDueAtBooking, withApprovedAddonDetails } from '@/lib/service-details'
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { createPaymentIntent } from '@/lib/payments/stripe'
@@ -48,7 +49,7 @@ export async function POST(req: NextRequest) {
       }, 0)
       const grandTotal = serviceTotal + addonTotal
       const depositPct = parseFloat(process.env.BOOKING_DEPOSIT_PERCENTAGE ?? '25') / 100
-      const depositAmount = Math.max(0, Math.ceil(grandTotal * depositPct))
+      const depositAmount = Math.max(0, amountDueAtBooking(mockService, grandTotal, depositPct * 100))
       const bookingRef = generateBookingRef()
 
       return NextResponse.json({
@@ -84,7 +85,7 @@ export async function POST(req: NextRequest) {
     const addonDetails = await Promise.all(
       (data.addons ?? []).map(async ({ addonId, qty }) => {
         const addon = await prisma.addon.findUnique({ where: { id: addonId } })
-        return addon ? { addon, qty } : null
+        return addon ? { addon: withApprovedAddonDetails(addon), qty } : null
       })
     )
     const validAddons = addonDetails.filter(Boolean) as Array<{ addon: { id: string; price: any }; qty: number }>
@@ -110,7 +111,7 @@ export async function POST(req: NextRequest) {
     }
 
     const depositPct = parseFloat(process.env.BOOKING_DEPOSIT_PERCENTAGE ?? '25') / 100
-    const depositAmount = Math.max(0, Math.ceil(grandTotal * depositPct) - creditApplied)
+    const depositAmount = Math.max(0, amountDueAtBooking(service, grandTotal, depositPct * 100) - creditApplied)
 
     const bookingRef = generateBookingRef()
 

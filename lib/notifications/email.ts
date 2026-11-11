@@ -47,7 +47,7 @@ export async function sendBookingConfirmation(data: BookingEmailData) {
         <!-- Header -->
         <tr><td style="background:linear-gradient(135deg,#C4613A 0%,#8B4513 100%);padding:40px;text-align:center;">
           <h1 style="margin:0;color:#FFFFFF;font-size:28px;letter-spacing:1px;">Your Pottery Barn</h1>
-          <p style="margin:8px 0 0;color:#FAD7C0;font-size:14px;">✨ Booking Confirmed!</p>
+          <p style="margin:8px 0 0;color:#FAD7C0;font-size:14px;"> Booking Confirmed!</p>
         </td></tr>
         <!-- Body -->
         <tr><td style="padding:40px;">
@@ -58,9 +58,9 @@ export async function sendBookingConfirmation(data: BookingEmailData) {
           <div style="background:#FAF7F0;border-radius:12px;padding:24px;margin-bottom:24px;border-left:4px solid #C4613A;">
             <h2 style="margin:0 0 16px;color:#5C3D2E;font-size:20px;">${data.serviceName}</h2>
             <table width="100%" cellpadding="0" cellspacing="0" style="font-size:15px;">
-              <tr><td style="padding:4px 0;color:#6b7280;">📅 Date</td><td style="text-align:right;color:#5C3D2E;font-weight:600;">${data.date}</td></tr>
-              <tr><td style="padding:4px 0;color:#6b7280;">🕐 Time</td><td style="text-align:right;color:#5C3D2E;font-weight:600;">${data.time}</td></tr>
-              <tr><td style="padding:4px 0;color:#6b7280;">👥 Seats</td><td style="text-align:right;color:#5C3D2E;font-weight:600;">${data.seats}</td></tr>
+              <tr><td style="padding:4px 0;color:#6b7280;"> Date</td><td style="text-align:right;color:#5C3D2E;font-weight:600;">${data.date}</td></tr>
+              <tr><td style="padding:4px 0;color:#6b7280;"> Time</td><td style="text-align:right;color:#5C3D2E;font-weight:600;">${data.time}</td></tr>
+              <tr><td style="padding:4px 0;color:#6b7280;"> Seats</td><td style="text-align:right;color:#5C3D2E;font-weight:600;">${data.seats}</td></tr>
               ${addonsHtml}
               <tr><td colspan="2" style="border-top:1px solid #E5D5C8;margin:16px 0;padding:16px 0 0;"></td></tr>
               <tr><td style="color:#6b7280;">Total</td><td style="text-align:right;color:#5C3D2E;font-weight:700;font-size:18px;">${data.totalAmount}</td></tr>
@@ -76,9 +76,10 @@ export async function sendBookingConfirmation(data: BookingEmailData) {
 
           <!-- What to Bring -->
           <div style="border:1px solid #E5D5C8;border-radius:12px;padding:20px;margin-bottom:24px;">
-            <h3 style="margin:0 0 12px;color:#5C3D2E;font-size:16px;">📋 What to bring</h3>
+            <h3 style="margin:0 0 12px;color:#5C3D2E;font-size:16px;"> What to bring</h3>
             <ul style="margin:0;padding-left:20px;color:#6b7280;line-height:1.8;">
               <li>Clothes you don't mind getting a little messy</li>
+              ${data.serviceName.includes('Throwing') ? '<li>Come wearing trousers and short nails will make the process a whole lot easier!</li>' : ''}
               <li>Your booking reference (or show this email at the front desk)</li>
               <li>Any remaining balance due</li>
             </ul>
@@ -105,7 +106,7 @@ export async function sendBookingConfirmation(data: BookingEmailData) {
   return resend.emails.send({
     from: FROM,
     to: data.customerEmail,
-    subject: `✨ Booking Confirmed — ${data.serviceName} (${data.bookingRef})`,
+    subject: ` Booking Confirmed — ${data.serviceName} (${data.bookingRef})`,
     html,
   })
 }
@@ -113,7 +114,7 @@ export async function sendBookingConfirmation(data: BookingEmailData) {
 // ─── Reminder ─────────────────────────────────────────────────────────────────
 
 export async function sendBookingReminder(data: BookingEmailData & { hoursUntil: number }) {
-  const urgency = data.hoursUntil <= 2 ? '⏰ Starting soon!' : '📅 Reminder'
+  const urgency = data.hoursUntil <= 2 ? ' Starting soon!' : ' Reminder'
   const message = data.hoursUntil <= 2
     ? `Your session starts in just ${data.hoursUntil} hour${data.hoursUntil !== 1 ? 's' : ''}!`
     : `Your session is tomorrow — we're looking forward to seeing you!`
@@ -134,8 +135,8 @@ export async function sendBookingReminder(data: BookingEmailData & { hoursUntil:
           <p style="color:#6b7280;margin:0 0 32px;">${message}</p>
           <div style="background:#FAF7F0;border-radius:12px;padding:24px;border-left:4px solid #4A7C59;">
             <h2 style="margin:0 0 16px;color:#5C3D2E;font-size:18px;">${data.serviceName}</h2>
-            <p style="margin:4px 0;color:#6b7280;">📅 ${data.date} at ${data.time}</p>
-            <p style="margin:4px 0;color:#6b7280;">👥 ${data.seats} seat${data.seats !== 1 ? 's' : ''}</p>
+            <p style="margin:4px 0;color:#6b7280;"> ${data.date} at ${data.time}</p>
+            <p style="margin:4px 0;color:#6b7280;"> ${data.seats} seat${data.seats !== 1 ? 's' : ''}</p>
             <p style="margin:4px 0;color:#5C3D2E;font-weight:600;">Ref: ${data.bookingRef}</p>
           </div>
           <p style="color:#9ca3af;font-size:13px;margin-top:24px;text-align:center;">

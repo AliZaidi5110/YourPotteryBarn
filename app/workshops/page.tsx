@@ -1,3 +1,4 @@
+import { withApprovedServiceDetails } from '@/lib/service-details'
 import { prisma } from '@/lib/prisma'
 import { ServiceGrid } from '@/components/customer/ServiceGrid'
 import { SiteHeader } from '@/components/customer/SiteHeader'
@@ -18,7 +19,7 @@ async function getServices() {
       where: { active: true },
       orderBy: [{ category: 'asc' }, { name: 'asc' }],
     })
-    if (list && list.length > 0) return list
+    if (list && list.length > 0) return list.map(withApprovedServiceDetails)
     return DEFAULT_SERVICES
   } catch (error) {
     console.warn('Database not reachable, serving studio workshops fallback:', error)
@@ -39,7 +40,7 @@ export default async function WorkshopsPage() {
           {/* Background Workshops & Classes Image */}
           <div className="absolute inset-0 z-0 select-none pointer-events-none">
             <img
-              src="/images/workshops/workshops-classes-hero.jpg"
+              src="/images/gallery/gallery-6.avif"
               alt="Pottery workshops and classes at Your Pottery Barn"
               className="w-full h-full object-cover object-center"
             />
@@ -50,7 +51,7 @@ export default async function WorkshopsPage() {
           <div className="max-w-3xl mx-auto relative z-10">
             <div className="inline-flex items-center gap-2 bg-warm-white/15 backdrop-blur-md border border-warm-white/30 rounded-full px-4 py-1.5 mb-6 shadow-sm">
               <span className="text-warm-white text-xs font-semibold uppercase tracking-widest">
-                🏺 Studio Sessions &amp; Workshops
+                 Studio Sessions &amp; Workshops
               </span>
             </div>
             <h1 className="font-playfair text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 text-warm-white drop-shadow-md">

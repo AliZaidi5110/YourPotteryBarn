@@ -181,7 +181,7 @@ export default function PaymentsPage() {
                     </td>
                     <td className="px-4 py-3">
                       <span className={`px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap ${CHANNEL_COLORS[payment.channel] ?? 'bg-gray-100 text-gray-600'}`}>
-                        {payment.channel === 'ONLINE' ? '🌐 Online' : '🖥️ Terminal'}
+                        {payment.channel === 'ONLINE' ? ' Online' : ' Terminal'}
                       </span>
                     </td>
                     <td className="px-4 py-3">

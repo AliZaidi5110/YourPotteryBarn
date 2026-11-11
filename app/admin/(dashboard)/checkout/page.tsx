@@ -176,7 +176,7 @@ export default function CheckoutPage() {
       qc.invalidateQueries({ queryKey: ['checkout-search'] })
       setVoucherInfo(null)
       setVoucherCode('')
-      alert('✅ Voucher redeemed successfully!')
+      alert(' Voucher redeemed successfully!')
     },
     onError: (err: any) => alert(`Voucher redemption failed: ${err.message}`),
   })
@@ -398,8 +398,8 @@ export default function CheckoutPage() {
                           <p className="font-bold text-clay text-xl">Payment Approved!</p>
                           {terminalResult && (
                             <div className="bg-sage/10 rounded-xl p-4 text-sm text-sage space-y-1 text-left">
-                              <p>✓ Card: {terminalResult.cardBrand ?? 'Card'} ****{terminalResult.cardLast4}</p>
-                              <p>✓ Auth: {terminalResult.authCode}</p>
+                              <p> Card: {terminalResult.cardBrand ?? 'Card'} ****{terminalResult.cardLast4}</p>
+                              <p> Auth: {terminalResult.authCode}</p>
                             </div>
                           )}
                           <div className="flex gap-3 mt-4">

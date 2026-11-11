@@ -1,35 +1,12 @@
+import { Phone as ClientPhone } from 'lucide-react'
 import Link from 'next/link'
 import { Sparkles, Users, Crown, Gift, Phone, Check } from 'lucide-react'
 
 export function CelebrationsSection() {
   return (
     <section id="celebrations" className="relative py-20 lg:py-24 overflow-hidden bg-[#FAFAF8]" aria-label="Celebrations & Private Parties">
-      {/* Authentic Birthday Decor Backdrop - Perfectly proportioned, never squeezed */}
-      <div className="absolute inset-0 z-0 pointer-events-none select-none overflow-hidden">
-        {/* Left Party Decor: Party hat, grid mat, pastel lollipops at natural proportions */}
-        <div className="absolute -left-4 sm:left-0 top-1/2 -translate-y-1/2 w-64 sm:w-80 md:w-96 lg:w-[460px] max-w-[40vw] opacity-90 transition-opacity">
-          <img
-            src="/images/celebrations/party-decor-left.png"
-            alt="Birthday party hat and lollipops decor"
-            className="w-full h-auto object-contain select-none pointer-events-none drop-shadow-sm"
-          />
-        </div>
-
-        {/* Right Party Decor: Pink honeycomb paper ball, confetti, marshmallow, candles at natural proportions */}
-        <div className="absolute -right-4 sm:right-0 top-1/2 -translate-y-1/2 w-64 sm:w-80 md:w-96 lg:w-[460px] max-w-[40vw] opacity-90 transition-opacity">
-          <img
-            src="/images/celebrations/party-decor-right.png"
-            alt="Birthday party honeycomb and confetti decor"
-            className="w-full h-auto object-contain select-none pointer-events-none drop-shadow-sm"
-          />
-        </div>
-
-        {/* Soft radial glow to ensure cards and typography remain 100% readable */}
-        <div className="absolute inset-0 bg-radial from-transparent via-white/40 to-[#FAFAF8]/90" />
-      </div>
-
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
+
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
           <div className="inline-flex items-center gap-2 bg-terracotta/15 border border-terracotta/30 rounded-full px-4 py-1.5 mb-4">
@@ -42,19 +19,19 @@ export function CelebrationsSection() {
             Birthday Parties &amp; Celebrations
           </h2>
           <p className="text-clay-light text-base sm:text-lg leading-relaxed">
-            From kids&apos; birthdays and milestones to hen parties and family gatherings &mdash; make memories you can keep forever. All items are professionally glazed, kiln-fired, and ready in 1 week.
+            From kids&apos; birthdays and milestones to hen parties and family gatherings &mdash; make memories you can keep forever. All items are professionally glazed, kiln-fired, and normally ready after 2 weeks.
           </p>
         </div>
 
         {/* Packages Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto mb-12">
-          
+
           {/* Gold Package */}
           <div className="bg-warm-white rounded-3xl p-8 sm:p-10 border border-parchment shadow-pottery hover:shadow-pottery-lg transition-all flex flex-col justify-between relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-amber-100/50 rounded-bl-full pointer-events-none" />
+            <div className="absolute top-0 right-0 w-32 h-32 bg-parchment/50 rounded-bl-full pointer-events-none" />
             <div>
               <div className="flex items-center justify-between mb-4">
-                <span className="px-3.5 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-900 flex items-center gap-1.5">
+                <span className="px-3.5 py-1 rounded-full text-xs font-bold bg-parchment text-clay flex items-center gap-1.5">
                   <Gift size={13} /> Gold Package
                 </span>
                 <span className="text-2xl font-bold font-playfair text-clay">
@@ -87,7 +64,7 @@ export function CelebrationsSection() {
                 </li>
                 <li className="flex items-start gap-3">
                   <Check size={18} className="text-terracotta shrink-0 mt-0.5" />
-                  <span><strong>Unlimited squash, tea &amp; coffee</strong></span>
+                  <span><strong>English tea on the house; other drinks and snacks available to buy</strong></span>
                 </li>
                 <li className="flex items-start gap-3">
                   <Check size={18} className="text-terracotta shrink-0 mt-0.5" />
@@ -146,7 +123,7 @@ export function CelebrationsSection() {
                 </li>
                 <li className="flex items-start gap-3">
                   <Check size={18} className="text-terracotta-light shrink-0 mt-0.5" />
-                  <span><strong>Unlimited squash, tea &amp; coffee</strong></span>
+                  <span><strong>English tea on the house; other drinks and snacks available to buy</strong></span>
                 </li>
                 <li className="flex items-start gap-3">
                   <Check size={18} className="text-terracotta-light shrink-0 mt-0.5" />
@@ -174,13 +151,13 @@ export function CelebrationsSection() {
             <div className="md:col-span-5 relative group">
               <div className="relative rounded-2xl overflow-hidden shadow-pottery border-2 border-parchment/60 aspect-[3/4] max-w-xs mx-auto">
                 <img
-                  src="/images/celebrations/party-balloon-arch.jpg"
-                  alt="Birthday celebration party styling at Your Pottery Barn"
+                  src="/images/gallery/gallery-13.avif"
+                  alt="Children painting pottery around a party table at Your Pottery Barn"
                   className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
                 />
                 <div className="absolute top-3 left-3 bg-warm-white/95 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold text-clay shadow-sm flex items-center gap-1.5">
                   <Sparkles size={12} className="text-terracotta" />
-                  <span>Party Styling &amp; Decor</span>
+                  <span>Time Together</span>
                 </div>
               </div>
             </div>
@@ -194,7 +171,7 @@ export function CelebrationsSection() {
                 Unforgettable Parties &amp; Celebrations
               </h3>
               <p className="text-clay-light text-sm sm:text-base leading-relaxed mb-6">
-                Every birthday and private celebration includes dedicated party styling and reserved tables. Relax with friends and family, share snacks and cake, and create custom ceramic pieces you can keep forever!
+                Spend time with friends and family at your own reserved tables. We sell a selection of drinks and snacks but English tea is always on the house! For exclusive private bookings, you may bring your own food by prior arrangement.
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 mb-6 text-sm text-clay">
@@ -208,11 +185,11 @@ export function CelebrationsSection() {
                 </div>
                 <div className="flex items-start gap-2.5">
                   <Check size={16} className="text-terracotta shrink-0 mt-0.5" />
-                  <span><strong>Bring Birthday Cake &amp; Treats</strong> (free squash/tea)</span>
+                  <span><strong>Food by prior arrangement</strong> for exclusive private bookings</span>
                 </div>
                 <div className="flex items-start gap-2.5">
                   <Check size={16} className="text-terracotta shrink-0 mt-0.5" />
-                  <span><strong>Kiln Fired &amp; Ready in 1 Week</strong> to cherish forever</span>
+                  <span><strong>Kiln Fired &amp; Ready after 2 Weeks</strong> to cherish forever</span>
                 </div>
               </div>
 
@@ -238,7 +215,7 @@ export function CelebrationsSection() {
         <div className="bg-warm-white rounded-2xl p-6 sm:p-8 max-w-4xl mx-auto border border-parchment flex flex-col sm:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded-full bg-terracotta/10 text-terracotta flex items-center justify-center shrink-0 text-xl">
-              📞
+              <ClientPhone size={22} aria-hidden="true" />
             </div>
             <div>
               <h4 className="font-playfair text-lg font-bold text-clay">

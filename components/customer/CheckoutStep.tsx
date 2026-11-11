@@ -1,5 +1,6 @@
 'use client'
 
+import { isPaintingSeatBooking } from '@/lib/service-details'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
@@ -209,10 +210,10 @@ export function CheckoutStep({ service, booking, addons, grandTotal, depositAmou
         {/* Deposit info */}
         <div className="bg-sage/10 rounded-xl p-4 mb-5 border border-sage/20">
           <div className="flex justify-between items-center mb-1">
-            <span className="text-sage font-semibold text-sm">Deposit due today (25%)</span>
+            <span className="text-sage font-semibold text-sm">{isPaintingSeatBooking(service) ? 'Booking payment due today' : 'Deposit due today (25%)'}</span>
             <span className="text-sage font-bold">{formatCurrency(effectiveTotal)}</span>
           </div>
-          <p className="text-sage/70 text-xs">Remaining balance of {formatCurrency(balanceDue)} is due in-studio on the day.</p>
+          <p className="text-sage/70 text-xs">{isPaintingSeatBooking(service) ? 'Your £12 per person booking payment is deducted from your pottery on the day. Pay any difference at the barn.' : <>Remaining balance of {formatCurrency(balanceDue)} is due in-studio on the day.</>}</p>
         </div>
 
         {error && (
@@ -239,7 +240,7 @@ export function CheckoutStep({ service, booking, addons, grandTotal, depositAmou
             {isLoading ? (
               <><Loader2 size={18} className="animate-spin" /> Processing...</>
             ) : (
-              <>Pay Deposit — {formatCurrency(effectiveTotal)}</>
+              <>{isPaintingSeatBooking(service) ? 'Pay Booking Payment' : 'Pay Deposit'} — {formatCurrency(effectiveTotal)}</>
             )}
           </button>
         </div>

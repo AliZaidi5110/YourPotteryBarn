@@ -79,10 +79,10 @@ export function ParticipantDrawer({
   return (
     <>
       <div className="fixed inset-0 z-40 bg-clay/40 backdrop-blur-xs transition-opacity animate-fade-in" onClick={onClose} />
-      
+
       {/* Sliding Drawer Container */}
       <aside className="fixed inset-y-0 right-0 z-50 w-full max-w-2xl bg-warm-white shadow-pottery-xl border-l border-parchment flex flex-col transform transition-transform duration-300 ease-out">
-        
+
         {/* Drawer Header */}
         <div className="p-6 border-b border-parchment bg-cream/50">
           <div className="flex items-start justify-between gap-4">
@@ -155,7 +155,7 @@ export function ParticipantDrawer({
                   />
                 </div>
                 <span className="text-xs font-bold text-clay font-mono">
-                  {session.capacityBooked}/{session.capacityMax} 👤
+                  {session.capacityBooked}/{session.capacityMax}
                 </span>
                 {session.waitlistCount > 0 && (
                   <span className="text-[10px] bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded font-medium">
@@ -257,7 +257,7 @@ export function ParticipantDrawer({
                           {booking.status}
                         </span>
                         <p className="text-xs font-mono font-bold text-clay mt-1">
-                          {booking.seats} 👤 guest{booking.seats !== 1 ? 's' : ''}
+                          {booking.seats}  guest{booking.seats !== 1 ? 's' : ''}
                         </p>
                       </div>
                     </div>
@@ -300,7 +300,7 @@ export function ParticipantDrawer({
                       >
                         <UserCheck size={14} />
                         {booking.checkedIn ? (
-                          <span>Checked In ✓ ({booking.checkedInAt || '10:00'})</span>
+                          <span>Checked In  ({booking.checkedInAt || '10:00'})</span>
                         ) : (
                           <span>Mark Attended</span>
                         )}

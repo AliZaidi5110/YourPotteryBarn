@@ -1,3 +1,4 @@
+import { OpeningHours } from '@/components/customer/OpeningHours'
 import { SiteHeader } from '@/components/customer/SiteHeader'
 import { SiteFooter } from '@/components/customer/SiteFooter'
 import { HeroSection } from '@/components/customer/HeroSection'
@@ -11,7 +12,7 @@ import Link from 'next/link'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Your Pottery Barn — Turning Clay Into Amazing Art',
+  title: 'Your Pottery Barn — A place to create, connect and belong.',
   description: 'Book a pottery workshop, wheel throwing class, or creative clay session at Your Pottery Barn in Hartley, Kent. Celebrations, parties, and studio gallery.',
 }
 
@@ -24,6 +25,7 @@ export default function HomePage() {
         <AboutSection />
         <MeetTheOwnerSection />
         <WhyChooseUsSection />
+        <OpeningHours />
         <CelebrationsSection />
         <GallerySection limit={8} showViewAll={true} />
         <TestimonialsSection />
@@ -52,7 +54,7 @@ export default function HomePage() {
                 href="/gift-cards"
                 className="btn-secondary text-base px-8 py-4 inline-flex items-center justify-center gap-2"
               >
-                🎁 Buy a Gift Card
+                 Buy a Gift Card
               </Link>
             </div>
           </div>

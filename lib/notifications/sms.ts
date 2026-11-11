@@ -35,10 +35,10 @@ export async function sendBookingConfirmationSMS(params: {
     return
   }
 
-  const message = `Hi ${params.customerName}! Your ${STUDIO_NAME} booking is confirmed 🎉\n\n` +
-    `📋 ${params.serviceName}\n` +
-    `📅 ${params.date} at ${params.time}\n` +
-    `🔖 Ref: ${params.bookingRef}\n\n` +
+  const message = `Hi ${params.customerName}! Your ${STUDIO_NAME} booking is confirmed \n\n` +
+    ` ${params.serviceName}\n` +
+    ` ${params.date} at ${params.time}\n` +
+    ` Ref: ${params.bookingRef}\n\n` +
     `See you soon! Reply to this number for any questions.`
 
   return client.messages.create({ to: params.to, from: FROM, body: message })
@@ -59,7 +59,7 @@ export async function sendReminderSMS(params: {
     return
   }
 
-  const urgency = params.hoursUntil <= 2 ? '⏰' : '📅'
+  const urgency = params.hoursUntil <= 2 ? '' : ''
   const timeframe = params.hoursUntil <= 2 ? `in ${params.hoursUntil}hrs` : 'tomorrow'
   const message = `${urgency} ${STUDIO_NAME} reminder: ${params.serviceName} is ${timeframe} at ${params.time}.\n` +
     `Ref: ${params.bookingRef}. Can't make it? Email hello@yourpottery.co.uk ASAP.`

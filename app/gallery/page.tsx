@@ -19,8 +19,8 @@ export default function GalleryPage() {
           {/* Background Studio Photo Gallery Image */}
           <div className="absolute inset-0 z-0 select-none pointer-events-none">
             <img
-              src="/images/gallery/studio-photo-gallery-hero.jpg"
-              alt="Hands creating ceramic pottery on wheel at Your Pottery Barn"
+              src="/images/gallery/gallery-10.avif"
+              alt="A group of children posing by our reception counter"
               className="w-full h-full object-cover object-center"
             />
             {/* Atmospheric overlay to blend with brand clay palette and ensure pristine text contrast */}
@@ -30,7 +30,7 @@ export default function GalleryPage() {
           <div className="max-w-3xl mx-auto relative z-10">
             <div className="inline-flex items-center gap-2 bg-warm-white/15 backdrop-blur-md border border-warm-white/30 rounded-full px-4 py-1.5 mb-6 shadow-sm">
               <span className="text-warm-white text-xs font-semibold uppercase tracking-widest">
-                📸 Authentic Studio Life
+                 Authentic Studio Life
               </span>
             </div>
             <h1 className="font-playfair text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 text-warm-white drop-shadow-md">

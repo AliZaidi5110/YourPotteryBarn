@@ -1,5 +1,8 @@
 'use client'
 
+import { amountDueAtBooking, isPaintingSeatBooking } from '@/lib/service-details'
+import { CategoryIcon } from './CategoryIcon'
+
 import { useState, useMemo } from 'react'
 import { formatCurrency, formatDate, formatTime } from '@/lib/utils'
 import { Calendar, Clock, Users, ShoppingCart, ChevronRight, ChevronLeft, Minus, Plus, Check } from 'lucide-react'
@@ -57,7 +60,7 @@ export function BookingFlow({ service, slots, addons }: BookingFlowProps) {
 
   // Determine deposit amount (25% by default)
   const depositPct = 25
-  const depositAmount = Math.ceil(grandTotal * depositPct / 100)
+  const depositAmount = amountDueAtBooking(service, grandTotal, depositPct)
 
   return (
     <div className="max-w-4xl mx-auto animate-fade-in">
@@ -71,11 +74,11 @@ export function BookingFlow({ service, slots, addons }: BookingFlowProps) {
       <div className="bg-warm-white rounded-2xl shadow-pottery border border-parchment/50 p-6 mb-6">
         <div className="flex items-start gap-4">
           <div className="w-16 h-16 rounded-xl bg-terracotta/10 flex items-center justify-center text-2xl flex-shrink-0">
-            🏺
+            <CategoryIcon category={service.category} size={28} />
           </div>
           <div className="flex-1 min-w-0">
             <h1 className="font-playfair font-bold text-2xl text-clay mb-1">{service.name}</h1>
-            <p className="text-clay-light text-sm line-clamp-2">{service.description}</p>
+            <p className="text-clay-light text-sm">{service.description}</p>
             <div className="flex flex-wrap items-center gap-4 mt-3 text-xs text-clay-light">
               <span className="flex items-center gap-1"><Clock size={12} /> {service.durationMinutes / 60}hr session</span>
               <span className="flex items-center gap-1"><Users size={12} /> Up to {service.maxCapacity} people</span>
@@ -183,8 +186,8 @@ export function BookingFlow({ service, slots, addons }: BookingFlowProps) {
 
             {step === 2 && (
               <div className="mt-3 p-3 bg-sage/10 rounded-xl border border-sage/20 text-xs text-sage">
-                <p className="font-semibold mb-1">💳 Deposit: {formatCurrency(depositAmount)}</p>
-                <p className="text-sage/70">Balance ({formatCurrency(grandTotal - depositAmount)}) due on the day.</p>
+                <p className="font-semibold mb-1"> {isPaintingSeatBooking(service) ? 'Booking payment' : 'Deposit'}: {formatCurrency(depositAmount)}</p>
+                <p className="text-sage/70">{isPaintingSeatBooking(service) ? 'Your painting booking payment is deducted from the pottery you choose on the day.' : <>Balance ({formatCurrency(grandTotal - depositAmount)}) due on the day.</>}</p>
               </div>
             )}
           </div>
@@ -215,7 +218,7 @@ function StepDateTime({
   if (availableDates.length === 0) {
     return (
       <div className="bg-warm-white rounded-2xl shadow-pottery border border-parchment/50 p-8 text-center">
-        <div className="text-5xl mb-4">📅</div>
+        <Calendar size={40} className="mx-auto mb-4" aria-hidden="true" />
         <h3 className="font-playfair font-semibold text-xl text-clay mb-2">No upcoming slots</h3>
         <p className="text-clay-light">We&apos;re currently adding new dates for this session. Check back soon or contact us!</p>
       </div>
@@ -286,7 +289,7 @@ function StepDateTime({
                     {formatTime(slot.startTime)}
                   </div>
                   <div className={`text-xs mt-1 ${isSelected ? 'text-warm-white/80' : isLow ? 'text-red-500 font-medium' : 'text-clay-light'}`}>
-                    {isLow ? `⚡ ${spotsLeft} left!` : `${spotsLeft} spots`}
+                    {isLow ? ` ${spotsLeft} left!` : `${spotsLeft} spots`}
                   </div>
                 </button>
               )

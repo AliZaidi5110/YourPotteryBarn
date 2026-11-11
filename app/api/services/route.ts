@@ -1,3 +1,4 @@
+import { withApprovedServiceDetails } from '@/lib/service-details'
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
@@ -11,5 +12,5 @@ export async function GET(req: NextRequest) {
     orderBy: [{ category: 'asc' }, { name: 'asc' }],
   })
 
-  return NextResponse.json({ services })
+  return NextResponse.json({ services: services.map(withApprovedServiceDetails) })
 }

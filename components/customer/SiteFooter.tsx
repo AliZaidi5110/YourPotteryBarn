@@ -1,3 +1,4 @@
+import { Phone, MapPin, Mail, Compass, Gift } from 'lucide-react'
 export function SiteFooter() {
   return (
     <footer className="bg-clay text-cream/80 mt-20" role="contentinfo">
@@ -84,9 +85,8 @@ export function SiteFooter() {
               <li>
                 <a href="/collections-postage" className="hover:text-terracotta-light transition-colors">Collections &amp; Postage</a>
               </li>
-              <li>
-                <a href="/about" className="hover:text-terracotta-light transition-colors">About Our Studio</a>
-              </li>
+              <li><a href="/about" className="hover:text-terracotta-light transition-colors">About Our Studio</a></li>
+              <li><a href="/faqs" className="hover:text-terracotta-light transition-colors">Your Questions, Answered</a></li>
               <li>
                 <a href="/gift-cards" className="hover:text-terracotta-light transition-colors">Gift Cards &amp; Vouchers</a>
               </li>
@@ -96,9 +96,10 @@ export function SiteFooter() {
           {/* Contact */}
           <div>
             <h3 className="font-semibold text-warm-white mb-4 text-sm uppercase tracking-wide">Visit The Barn</h3>
+            <p className="text-sm text-cream/80 mb-4">Every Saturday, 10am–5pm.<br /><a href="/workshops" className="underline">Check the calendar</a> for selected weekdays, Sundays and evenings.</p>
             <address className="not-italic text-sm text-cream/70 space-y-2.5">
-              <p>
-                📍{' '}
+              <p className="flex items-start gap-2">
+                <MapPin size={16} className="shrink-0 mt-1" aria-hidden="true" />
                 <a
                   href="http://google.com/maps/place/Your+Pottery+Barn+HARTLEY/@51.3651727,0.3189965,17z/data=!3m1!4b1!4m6!3m5!1s0x47d8b5189ab051bf:0xfa84a8198d12bb9!8m2!3d51.3651727!4d0.3189965!16s%2Fg%2F11kpcxdhn0?entry=ttu"
                   target="_blank"
@@ -109,8 +110,8 @@ export function SiteFooter() {
                   Hartley Bottom Road, Hartley, Kent, DA3 8LJ
                 </a>
               </p>
-              <p>
-                🧭 What3Words:{' '}
+              <p className="flex flex-wrap items-center gap-2">
+                <Compass size={16} aria-hidden="true" /> What3Words:{' '}
                 <a
                   href="https://maps.app.goo.gl/2H9VXpmJTzNaU1qn9"
                   target="_blank"
@@ -120,15 +121,15 @@ export function SiteFooter() {
                   ///bunk.apron.slides
                 </a>
               </p>
-              <p>
-                📞 <a href="tel:+447809208786" className="hover:text-terracotta-light transition-colors">+44 7809 208786</a>
+              <p className="flex items-center gap-2">
+                <Phone size={16} aria-hidden="true" /> <a href="tel:+447809208786" className="hover:text-terracotta-light transition-colors">+44 7809 208786</a>
               </p>
-              <p>
-                ✉️ <a href="mailto:info@yourpotterybarn.co.uk" className="hover:text-terracotta-light transition-colors">info@yourpotterybarn.co.uk</a>
+              <p className="flex items-center gap-2">
+                <Mail size={16} className="shrink-0" aria-hidden="true" /> <a href="mailto:info@yourpotterybarn.co.uk" className="hover:text-terracotta-light transition-colors break-all">info@yourpotterybarn.co.uk</a>
               </p>
               <div className="pt-2">
                 <a href="/gift-cards" className="inline-flex items-center gap-1.5 text-terracotta-light hover:text-warm-white transition-colors font-medium">
-                  🎁 Gift cards available
+                  <Gift size={16} aria-hidden="true" /> Gift cards available
                 </a>
               </div>
             </address>

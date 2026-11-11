@@ -209,7 +209,7 @@ export default function BookingsPage() {
                   href={`/admin/checkout?ref=${selectedBooking.bookingRef}`}
                   className="btn-primary py-2.5 text-sm text-center"
                 >
-                  💳 Process Payment
+                   Process Payment
                 </a>
                 {selectedBooking.status !== 'CANCELLED' && selectedBooking.status !== 'PAID' && (
                   <button

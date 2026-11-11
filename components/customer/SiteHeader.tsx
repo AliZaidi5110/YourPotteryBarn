@@ -33,7 +33,7 @@ export function SiteHeader() {
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-6 lg:gap-8" aria-label="Main navigation">
+          <nav className="hidden xl:flex items-center gap-5" aria-label="Main navigation">
             <Link href="/workshops" className="text-clay-light hover:text-terracotta font-medium text-sm transition-colors">
               Workshops
             </Link>
@@ -49,6 +49,7 @@ export function SiteHeader() {
             <Link href="/gift-cards" className="text-clay-light hover:text-terracotta font-medium text-sm transition-colors">
               Gift Cards
             </Link>
+            <Link href="/faqs" className="text-clay-light hover:text-terracotta font-medium text-sm transition-colors">FAQs</Link>
             {session ? (
               <Link href="/account" className="flex items-center gap-2 text-sm font-medium text-clay hover:text-terracotta transition-colors">
                 <User size={16} />
@@ -97,7 +98,7 @@ export function SiteHeader() {
 
           {/* Mobile menu button */}
           <button
-            className="md:hidden p-2 rounded-lg text-clay hover:bg-parchment transition-colors"
+            className="xl:hidden p-2 rounded-lg text-clay hover:bg-parchment transition-colors"
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label={menuOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={menuOpen}
@@ -108,7 +109,7 @@ export function SiteHeader() {
 
         {/* Mobile Nav */}
         {menuOpen && (
-          <div className="md:hidden py-4 border-t border-parchment animate-fade-in">
+          <div className="xl:hidden py-4 border-t border-parchment animate-fade-in">
             <nav className="flex flex-col gap-2" aria-label="Mobile navigation">
               {[
                 { href: '/workshops', label: 'Workshops & Classes' },
@@ -116,6 +117,7 @@ export function SiteHeader() {
                 { href: '/gallery', label: 'Photo Gallery' },
                 { href: '/about', label: 'About Us' },
                 { href: '/gift-cards', label: 'Gift Cards' },
+                { href: '/faqs', label: 'FAQs' },
                 session
                   ? { href: '/account', label: 'My Bookings' }
                   : { href: '/login', label: 'Sign In' },
@@ -167,7 +169,7 @@ export function SiteHeader() {
                   rel="noopener noreferrer"
                   className="text-clay-light hover:text-terracotta flex items-center gap-1 font-semibold"
                 >
-                  <span>📍 Maps</span>
+                  <span> Maps</span>
                 </a>
               </div>
             </nav>

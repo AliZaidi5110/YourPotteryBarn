@@ -1,3 +1,4 @@
+import { withApprovedServiceDetails, withApprovedAddonDetails } from '@/lib/service-details'
 import { prisma } from '@/lib/prisma'
 import { notFound } from 'next/navigation'
 import { SiteHeader } from '@/components/customer/SiteHeader'
@@ -44,9 +45,9 @@ async function getServiceWithSlots(serviceId: string) {
     ])
     if (service) {
       return {
-        service,
+        service: withApprovedServiceDetails(service),
         slots: slots.length > 0 ? slots : getDefaultSlots(serviceId),
-        addons: addons.length > 0 ? addons : DEFAULT_ADDONS,
+        addons: addons.length > 0 ? addons.map(withApprovedAddonDetails) : DEFAULT_ADDONS,
       }
     }
   } catch (err) {

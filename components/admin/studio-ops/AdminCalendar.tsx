@@ -84,7 +84,7 @@ export function AdminCalendar({ initialSessions }: AdminCalendarProps) {
   const weekDays = useMemo(() => {
     const days: { date: Date; dateStr: string; label: string; isToday: boolean }[] = []
     const curr = new Date(currentDate)
-    
+
     // Set to Monday of current week
     const day = curr.getDay()
     const diff = curr.getDate() - day + (day === 0 ? -6 : 1) // adjust when day is sunday
@@ -376,7 +376,7 @@ export function AdminCalendar({ initialSessions }: AdminCalendarProps) {
     <div className="space-y-5">
       {/* Calendar Top Control Bar */}
       <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4 bg-warm-white p-5 rounded-3xl border border-parchment shadow-pottery">
-        
+
         {/* Title & Navigation */}
         <div className="flex flex-wrap items-center gap-3">
           <div className="flex items-center gap-1.5 bg-cream p-1 rounded-2xl border border-parchment">
@@ -470,7 +470,7 @@ export function AdminCalendar({ initialSessions }: AdminCalendarProps) {
 
       {/* Main Grid View */}
       <div className="bg-warm-white rounded-3xl border border-parchment shadow-pottery-xl overflow-hidden flex flex-col">
-        
+
         {/* Days Header */}
         <div className="grid grid-cols-[70px_repeat(7,1fr)] border-b border-parchment bg-cream/60">
           <div className="p-3 text-[11px] font-mono font-bold text-clay-light border-r border-parchment flex items-center justify-center">
@@ -598,7 +598,7 @@ export function AdminCalendar({ initialSessions }: AdminCalendarProps) {
                                         : 'bg-sage/15 text-sage'
                                     }`}
                                   >
-                                    {session.capacityBooked}/{session.capacityMax} 👤
+                                    {session.capacityBooked}/{session.capacityMax}
                                   </span>
                                   {session.waitlistCount > 0 && (
                                     <span className="text-[9px] bg-amber-100 text-amber-800 px-1 rounded font-medium">
