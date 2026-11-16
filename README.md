@@ -1,5 +1,9 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+Staff checkout offers no discount (the default), a 5% discount, or a custom discount amount in pounds. Choose one option; discounts do not stack. Discounts apply to the full order before deducting deposits and payments already collected. Custom amounts must be non-negative, have at most two decimal places, and cannot exceed the order total. Card, cash splits, and voucher payments use the remaining balance. The saved discount and its type are retained when reopening a booking.
+
+After updating an existing database, run `npm run db:push` to add the `Booking.checkoutDiscountAmount` (default `0`) and `Booking.checkoutDiscountType` (default `NONE`) columns. Run `npm run test:checkout` to verify discount, deposit, rounding, and saved receipt calculations. Studio calendar orders continue to use the existing in-memory demo store.
+
 ## Getting Started
 
 First, run the development server:

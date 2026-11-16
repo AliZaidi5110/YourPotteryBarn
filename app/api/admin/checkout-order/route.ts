@@ -1,21 +1,59 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { saveBookingOrderCheckout } from '@/lib/studio-ops/data'
+import { getStudioStore, saveBookingOrderCheckout } from '@/lib/studio-ops/data'
 import { prisma } from '@/lib/prisma'
+import { calculateCheckoutTotals } from '@/lib/payments/checkout-totals'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth'
+import { z } from 'zod'
+
+const CheckoutSchema = z.object({
+  sessionId: z.string().min(1),
+  bookingId: z.string().min(1),
+  potteryItems: z.array(z.object({ itemId: z.string(), quantity: z.number().int().positive().max(1000) })).min(1),
+  applyDiscount: z.boolean().default(false),
+  customDiscountAmount: z.number().finite().nonnegative().multipleOf(0.01).optional(),
+  paymentMethod: z.enum(['TERMINAL_SHIFT4', 'STRIPE', 'CASH', 'VOUCHER']).default('TERMINAL_SHIFT4'),
+  voucherCode: z.string().optional(),
+}).refine(data => !data.applyDiscount || data.customDiscountAmount === undefined)
 
 export async function POST(req: NextRequest) {
-  try {
-    const body = await req.json()
-    const { sessionId, bookingId, potteryItems, grossTotal, depositDeducted, balanceDue, paymentMethod, voucherCode } = body
+  const session = await getServerSession(authOptions)
+  if (!session || !(session.user as any)?.isStaff) {
+    return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
+  }
 
-    if (!sessionId || !bookingId) {
-      return NextResponse.json({ error: 'sessionId and bookingId are required' }, { status: 400 })
+  try {
+    const parsed = CheckoutSchema.safeParse(await req.json())
+    if (!parsed.success) return NextResponse.json({ error: 'Invalid checkout details' }, { status: 400 })
+    const { sessionId, bookingId, potteryItems: requestedItems, applyDiscount, customDiscountAmount, paymentMethod, voucherCode } = parsed.data
+    const store = getStudioStore()
+    const booking = store.bookingsBySession[sessionId]?.find(b => b.id === bookingId)
+    if (!booking) return NextResponse.json({ error: 'Booking or session not found' }, { status: 404 })
+    if (booking.orderCompleted) return NextResponse.json({ error: 'This order is already settled' }, { status: 409 })
+
+    const potteryItems = []
+    for (const requested of requestedItems) {
+      const item = store.inventory.find(i => i.id === requested.itemId)
+      if (!item) return NextResponse.json({ error: 'Unknown pottery item' }, { status: 400 })
+      potteryItems.push({
+        itemId: item.id, name: item.name, category: item.category,
+        quantity: requested.quantity, unitPrice: item.price, totalPrice: item.price * requested.quantity,
+      })
     }
+    let totals
+    try {
+      totals = calculateCheckoutTotals(potteryItems.reduce((sum, item) => sum + item.totalPrice, 0), booking.amountPaid, applyDiscount, customDiscountAmount)
+    } catch (err) {
+      return NextResponse.json({ error: err instanceof Error ? err.message : 'Invalid discount' }, { status: 400 })
+    }
+    const { balanceDue } = totals
 
     // ── Voucher redemption ──────────────────────────────────────────────────────
     let voucherApplied = 0
     let voucherRemainingAfter: number | null = null
 
-    if (paymentMethod === 'VOUCHER' && voucherCode) {
+    if (paymentMethod === 'VOUCHER' && balanceDue > 0) {
+      if (!voucherCode) return NextResponse.json({ error: 'Voucher code is required' }, { status: 400 })
       try {
         const voucher = await prisma.voucher.findUnique({ where: { code: String(voucherCode).toUpperCase().trim() } })
 
@@ -50,11 +88,10 @@ export async function POST(req: NextRequest) {
     }
 
     const updatedBooking = saveBookingOrderCheckout(sessionId, bookingId, {
-      potteryItems: potteryItems || [],
-      grossTotal: Number(grossTotal) || 0,
-      depositDeducted: Number(depositDeducted) || 0,
-      balanceDue: Number(balanceDue) || 0,
-      paymentMethod: paymentMethod || 'TERMINAL_SHIFT4',
+      potteryItems,
+      applyDiscount,
+      customDiscountAmount,
+      paymentMethod,
     })
 
     if (!updatedBooking) {
@@ -64,6 +101,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       success: true,
       booking: updatedBooking,
+      totals,
       transactionId: `TXN-${Date.now().toString().slice(-6)}`,
       completedAt: new Date().toISOString(),
       receiptNumber: `REC-${Math.floor(100000 + Math.random() * 900000)}`,

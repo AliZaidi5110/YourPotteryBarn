@@ -176,6 +176,8 @@ export async function sendPaymentReceipt(data: {
   date: string
   amountCharged: string
   paymentMethod: string
+  discountAmount?: string
+  discountType?: string
   transactionId?: string
 }) {
   const html = `
@@ -197,6 +199,7 @@ export async function sendPaymentReceipt(data: {
             <tr><td style="padding:12px;color:#6b7280;">Service</td><td style="padding:12px;text-align:right;color:#5C3D2E;">${data.serviceName}</td></tr>
             <tr style="background:#FAF7F0;"><td style="padding:12px;color:#6b7280;">Date</td><td style="padding:12px;text-align:right;color:#5C3D2E;">${data.date}</td></tr>
             <tr><td style="padding:12px;color:#6b7280;">Payment method</td><td style="padding:12px;text-align:right;color:#5C3D2E;">${data.paymentMethod}</td></tr>
+            ${data.discountAmount ? `<tr><td style="padding:12px;color:#6b7280;">${data.discountType === 'FIXED' ? 'Custom checkout discount' : 'Checkout discount (5%)'}</td><td style="padding:12px;text-align:right;color:#C4613A;">−${data.discountAmount}</td></tr>` : ''}
             ${data.transactionId ? `<tr style="background:#FAF7F0;"><td style="padding:12px;color:#6b7280;">Transaction ID</td><td style="padding:12px;text-align:right;color:#5C3D2E;font-size:12px;font-family:monospace;">${data.transactionId}</td></tr>` : ''}
             <tr style="border-top:2px solid #C4613A;"><td style="padding:16px 12px;color:#5C3D2E;font-weight:700;font-size:18px;">Amount charged</td><td style="padding:16px 12px;text-align:right;color:#C4613A;font-weight:700;font-size:22px;">${data.amountCharged}</td></tr>
           </table>

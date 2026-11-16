@@ -1,9 +1,11 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Search, Plus, Loader2, CreditCard, CheckCircle, XCircle, AlertCircle, RefreshCw, Printer, Minus, Calendar, Users, Tag, Banknote, SplitSquareHorizontal } from 'lucide-react'
 import { formatCurrency, formatDate, formatTime } from '@/lib/utils'
+import { calculateCheckoutTotals, equalSplitAmounts, customDiscountError, savedDiscountType, type CheckoutDiscountType } from '@/lib/payments/checkout-totals'
+import { CheckoutDiscountControl } from '@/components/admin/CheckoutDiscountControl'
 
 interface BookingWithDetails {
   id: string
@@ -11,6 +13,8 @@ interface BookingWithDetails {
   status: string
   seats: number
   totalAmount: number
+  checkoutDiscountAmount?: number
+  checkoutDiscountType?: string
   amountPaid: number
   creditApplied: number
   customer: { id: string; name: string; email: string; phone?: string }
@@ -31,6 +35,11 @@ export default function CheckoutPage() {
   const [selectedBooking, setSelectedBooking] = useState<BookingWithDetails | null>(null)
   const [extraAddons, setExtraAddons] = useState<Record<string, number>>({})
   const [paymentTab, setPaymentTab] = useState<PaymentTab>('full')
+  const [discountType, setDiscountType] = useState<CheckoutDiscountType>('NONE')
+  const [customAmount, setCustomAmount] = useState('')
+  const applyDiscount = discountType === 'PERCENT'
+  const [adjusting, setAdjusting] = useState(false)
+  const [checkoutError, setCheckoutError] = useState('')
 
   // Full payment state
   const [terminalState, setTerminalState] = useState<TerminalState>('idle')
@@ -71,24 +80,65 @@ export default function CheckoutPage() {
     return sum + (addon ? addon.price * qty : 0)
   }, 0)
 
-  const amountDue = selectedBooking
-    ? Math.max(0, Number(selectedBooking.totalAmount) + extraAddonTotal - Number(selectedBooking.amountPaid))
-    : 0
+  const grossTotal = selectedBooking ? Number(selectedBooking.totalAmount) + Number(selectedBooking.checkoutDiscountAmount ?? 0) + extraAddonTotal : 0
+  const discountError = discountType === 'FIXED' ? customDiscountError(customAmount, grossTotal) : ''
+  const totals = calculateCheckoutTotals(
+    grossTotal,
+    Number(selectedBooking?.amountPaid ?? 0),
+    applyDiscount,
+    discountType === 'FIXED' ? (discountError ? 0 : Number(customAmount)) : undefined,
+  )
+  const amountDue = totals.balanceDue
+
+  async function prepareCheckout() {
+    if (discountError) throw new Error(discountError)
+    const res = await fetch('/api/admin/checkout-adjustment', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        bookingId: selectedBooking!.id, applyDiscount,
+        customDiscountAmount: discountType === 'FIXED' ? Number(customAmount) : undefined,
+        addons: Object.entries(extraAddons).map(([addonId, quantity]) => ({ addonId, quantity })),
+      }),
+    })
+    const data = await res.json()
+    if (!res.ok) throw new Error(data.error ?? 'Could not update checkout')
+    setSelectedBooking(data.booking)
+    setExtraAddons({})
+    qc.invalidateQueries({ queryKey: ['checkout-search'] })
+    return data as { booking: BookingWithDetails; totals: ReturnType<typeof calculateCheckoutTotals> }
+  }
+
+  async function refreshBooking() {
+    const res = await fetch(`/api/bookings?ref=${encodeURIComponent(selectedBooking!.bookingRef)}`)
+    if (!res.ok) return
+    const data = await res.json()
+    const updated = data.bookings?.find((b: BookingWithDetails) => b.id === selectedBooking!.id)
+    if (updated) setSelectedBooking(updated)
+  }
+
+  async function settleWithoutPayment() {
+    setAdjusting(true)
+    setCheckoutError('')
+    try { await prepareCheckout() }
+    catch (err) { setCheckoutError(err instanceof Error ? err.message : 'Could not settle checkout') }
+    finally { setAdjusting(false) }
+  }
 
   // Full terminal payment
   const terminalMutation = useMutation({
     mutationFn: async () => {
+      const checkout = await prepareCheckout()
       const res = await fetch('/api/payments/terminal', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ bookingId: selectedBooking!.id, amountPence: Math.round(amountDue * 100) }),
+        body: JSON.stringify({ bookingId: selectedBooking!.id, amountPence: Math.round(checkout.totals.balanceDue * 100) }),
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error ?? 'Payment failed')
       return data
     },
     onMutate: () => setTerminalState('processing'),
-    onSuccess: (data) => { setTerminalState('approved'); setTerminalResult(data); qc.invalidateQueries({ queryKey: ['checkout-search'] }) },
+    onSuccess: async (data) => { setTerminalState('approved'); setTerminalResult(data); await refreshBooking(); qc.invalidateQueries({ queryKey: ['checkout-search'] }) },
     onError: (err: any) => { setTerminalState('declined'); setTerminalResult({ error: err.message }) },
   })
 
@@ -96,6 +146,10 @@ export default function CheckoutPage() {
   const saveSplitsMutation = useMutation({
     mutationFn: async () => {
       const validSplits = splits.filter(s => s.personName && Number(s.amount) > 0)
+      if (Math.round(validSplits.reduce((sum, s) => sum + Number(s.amount), 0) * 100) !== Math.round(amountDue * 100)) {
+        throw new Error('Split amounts must match the remaining balance. Use Equal split to recalculate.')
+      }
+      await prepareCheckout()
       const res = await fetch(`/api/bookings/${selectedBooking!.id}/split-payments`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -104,7 +158,7 @@ export default function CheckoutPage() {
       if (!res.ok) throw new Error((await res.json()).error)
       return res.json()
     },
-    onSuccess: () => setSplitsSaved(true),
+    onSuccess: () => { setSplitsSaved(true); qc.invalidateQueries({ queryKey: ['split-data', selectedBooking?.id] }) },
     onError: (err: any) => alert(`Error saving splits: ${err.message}`),
   })
 
@@ -120,7 +174,7 @@ export default function CheckoutPage() {
       if (!res.ok) throw new Error(data.error ?? 'Payment failed')
       return data
     },
-    onSuccess: () => { qc.invalidateQueries({ queryKey: ['split-data', selectedBooking?.id] }); qc.invalidateQueries({ queryKey: ['checkout-search'] }) },
+    onSuccess: async () => { await refreshBooking(); qc.invalidateQueries({ queryKey: ['split-data', selectedBooking?.id] }); qc.invalidateQueries({ queryKey: ['checkout-search'] }) },
     onError: (err: any) => alert(`Payment failed: ${err.message}`),
   })
 
@@ -150,15 +204,16 @@ export default function CheckoutPage() {
 
   const redeemVoucherMutation = useMutation({
     mutationFn: async () => {
+      const checkout = await prepareCheckout()
       // Redeem against full booking as a payment record
-      const amount = Math.min(Number(voucherInfo.remainingValue), amountDue)
+      const amount = Math.min(Number(voucherInfo.remainingValue), checkout.totals.balanceDue)
       // We create a split for this amount then pay it via voucher
       const createSplit = await fetch(`/api/bookings/${selectedBooking!.id}/split-payments`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ splits: [{ personName: `Voucher ${voucherCode}`, amount }] }),
       })
-      const { splits: [{ id }] } = await (await fetch(`/api/bookings/${selectedBooking!.id}/split-payments`)).json()
+      if (!createSplit.ok) throw new Error((await createSplit.json()).error ?? 'Could not save voucher payment')
       // Find the split we just created
       const splitListRes = await fetch(`/api/bookings/${selectedBooking!.id}/split-payments`)
       const splitList = await splitListRes.json()
@@ -172,7 +227,8 @@ export default function CheckoutPage() {
       if (!res.ok) throw new Error((await res.json()).error)
       return res.json()
     },
-    onSuccess: () => {
+    onSuccess: async () => {
+      await refreshBooking()
       qc.invalidateQueries({ queryKey: ['checkout-search'] })
       setVoucherInfo(null)
       setVoucherCode('')
@@ -183,10 +239,14 @@ export default function CheckoutPage() {
 
   function handleSelectBooking(booking: BookingWithDetails) {
     setSelectedBooking(booking)
+    setDiscountType(savedDiscountType(booking.checkoutDiscountType, Number(booking.checkoutDiscountAmount ?? 0)))
+    setCustomAmount(Number(booking.checkoutDiscountAmount ?? 0).toFixed(2))
+    setCheckoutError('')
     setExtraAddons({})
     setTerminalState('idle')
     setTerminalResult(null)
-    setSplits(Array.from({ length: booking.seats }, (_, i) => ({ personName: `Person ${i + 1}`, amount: (Number(booking.totalAmount) / booking.seats).toFixed(2) })))
+    setSplits(equalSplitAmounts(Math.max(0, Number(booking.totalAmount) - Number(booking.amountPaid)), booking.seats)
+      .map((amount, i) => ({ personName: `Person ${i + 1}`, amount })))
     setSplitsSaved(false)
     setVoucherCode('')
     setVoucherInfo(null)
@@ -195,9 +255,12 @@ export default function CheckoutPage() {
 
   function autoEqualSplit() {
     if (!selectedBooking || splits.length === 0) return
-    const perPerson = (amountDue / splits.length).toFixed(2)
-    setSplits(splits.map(s => ({ ...s, amount: perPerson })))
+    const amounts = equalSplitAmounts(amountDue, splits.length)
+    setSplits(splits.map((s, i) => ({ ...s, amount: amounts[i] })))
   }
+
+  const checkoutBusy = adjusting || terminalMutation.isPending || saveSplitsMutation.isPending || paySplitMutation.isPending || redeemVoucherMutation.isPending
+  const adjustmentsLocked = checkoutBusy || splitsSaved || terminalState === 'approved'
 
   return (
     <div className="space-y-6">
@@ -240,6 +303,7 @@ export default function CheckoutPage() {
                 {searchResults.map((booking: BookingWithDetails) => (
                   <button
                     key={booking.id}
+                    disabled={checkoutBusy}
                     onClick={() => handleSelectBooking(booking)}
                     className={`w-full text-left p-3 rounded-xl border transition-all ${selectedBooking?.id === booking.id ? 'border-terracotta bg-terracotta/5' : 'border-parchment hover:border-terracotta/50 bg-cream'}`}
                   >
@@ -267,7 +331,7 @@ export default function CheckoutPage() {
           {selectedBooking && (
             <div className="bg-warm-white rounded-2xl shadow-pottery border border-parchment/50 p-5">
               <h2 className="font-semibold text-clay mb-4">Add last-minute extras</h2>
-              <div className="space-y-2">
+              <fieldset disabled={adjustmentsLocked} className="space-y-2 disabled:opacity-60">
                 {addons.map(addon => {
                   const qty = extraAddons[addon.id] ?? 0
                   return (
@@ -294,7 +358,7 @@ export default function CheckoutPage() {
                     </div>
                   )
                 })}
-              </div>
+              </fieldset>
             </div>
           )}
         </div>
@@ -321,6 +385,10 @@ export default function CheckoutPage() {
                 </p>
               </div>
 
+              <CheckoutDiscountControl type={discountType} onTypeChange={value => { setDiscountType(value); setCheckoutError('') }}
+                customAmount={customAmount} onAmountChange={setCustomAmount} maxAmount={grossTotal}
+                disabled={adjustmentsLocked} error={discountError} />
+
               {/* Amount breakdown */}
               <div className="bg-cream rounded-xl p-4 space-y-2 text-sm">
                 <div className="flex justify-between text-clay">
@@ -343,18 +411,35 @@ export default function CheckoutPage() {
                     </div>
                   )
                 })}
+                {discountType !== 'NONE' && (
+                  <>
+                    <div className="flex justify-between text-terracotta">
+                      <span>{discountType === 'FIXED' ? 'Custom checkout discount' : 'Checkout discount (5%)'}</span>
+                      <span>−{formatCurrency(totals.discountAmount)}</span>
+                    </div>
+                    <div className="flex justify-between text-clay">
+                      <span>Discounted total</span>
+                      <span>{formatCurrency(totals.totalAmount)}</span>
+                    </div>
+                  </>
+                )}
                 <div className="border-t border-parchment pt-2 flex justify-between text-clay-light">
-                  <span>Already paid</span>
+                  <span>Deposits / payments already collected</span>
                   <span>−{formatCurrency(Number(selectedBooking.amountPaid))}</span>
                 </div>
                 <div className="flex justify-between font-bold text-clay text-base">
                   <span>Amount due</span>
                   <span className="text-terracotta text-xl">{formatCurrency(amountDue)}</span>
                 </div>
+                {totals.creditSurplus > 0 && (
+                  <p className="text-xs text-clay-light">Overpayment: {formatCurrency(totals.creditSurplus)}. Arrange a credit or refund with the customer.</p>
+                )}
               </div>
 
+              {checkoutError && <p role="alert" className="text-sm text-red-600">{checkoutError}</p>}
+
               {/* Payment type tabs */}
-              {amountDue > 0 && (
+              {(amountDue > 0 || terminalState === 'approved') && (
                 <>
                   <div className="flex rounded-xl border border-parchment overflow-hidden">
                     {([
@@ -364,6 +449,7 @@ export default function CheckoutPage() {
                     ] as { key: PaymentTab; label: string; icon: React.ReactNode }[]).map(tab => (
                       <button
                         key={tab.key}
+                        disabled={checkoutBusy}
                         onClick={() => setPaymentTab(tab.key)}
                         className={`flex-1 py-2.5 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${paymentTab === tab.key ? 'bg-terracotta text-warm-white' : 'text-clay-light hover:text-clay hover:bg-cream'}`}
                       >
@@ -376,7 +462,7 @@ export default function CheckoutPage() {
                   {paymentTab === 'full' && (
                     <div className="space-y-3">
                       {terminalState === 'idle' && (
-                        <button onClick={() => terminalMutation.mutate()} disabled={amountDue <= 0}
+                        <button onClick={() => terminalMutation.mutate()} disabled={amountDue <= 0 || !!discountError}
                           className="btn-primary w-full py-5 text-lg flex items-center justify-center gap-3 disabled:opacity-50">
                           <CreditCard size={22} /> PAY — {formatCurrency(amountDue)}
                         </button>
@@ -464,7 +550,7 @@ export default function CheckoutPage() {
                       })()}
 
                       {!splitsSaved ? (
-                        <button onClick={() => saveSplitsMutation.mutate()} disabled={saveSplitsMutation.isPending || splits.some(s => !s.personName || !s.amount)}
+                        <button onClick={() => saveSplitsMutation.mutate()} disabled={saveSplitsMutation.isPending || !!discountError || splits.some(s => !s.personName || !s.amount)}
                           className="btn-primary w-full py-3 flex items-center justify-center gap-2 disabled:opacity-50">
                           {saveSplitsMutation.isPending ? <Loader2 size={16} className="animate-spin" /> : <Users size={16} />}
                           Save Split & Collect Individually
@@ -546,7 +632,7 @@ export default function CheckoutPage() {
                           {voucherInfo.issuedToName && <p className="text-xs text-clay-light">Issued to: {voucherInfo.issuedToName}</p>}
                           {voucherInfo.expiryDate && <p className="text-xs text-clay-light">Expires: {new Date(voucherInfo.expiryDate).toLocaleDateString('en-GB')}</p>}
 
-                          <button onClick={() => redeemVoucherMutation.mutate()} disabled={redeemVoucherMutation.isPending}
+                          <button onClick={() => redeemVoucherMutation.mutate()} disabled={redeemVoucherMutation.isPending || !!discountError}
                             className="btn-primary w-full py-3 mt-2 flex items-center justify-center gap-2 disabled:opacity-50">
                             {redeemVoucherMutation.isPending ? <Loader2 size={16} className="animate-spin" /> : <Tag size={16} />}
                             Redeem {formatCurrency(Math.min(voucherInfo.remainingValue, amountDue))}
@@ -559,9 +645,16 @@ export default function CheckoutPage() {
               )}
 
               {amountDue <= 0 && (
-                <div className="bg-sage/10 rounded-xl p-4 text-sage text-sm text-center flex items-center gap-2 justify-center">
-                  <CheckCircle size={16} /> This booking is fully paid.
-                </div>
+                Number(selectedBooking.checkoutDiscountAmount ?? 0) !== totals.discountAmount ||
+                  savedDiscountType(selectedBooking.checkoutDiscountType, Number(selectedBooking.checkoutDiscountAmount ?? 0)) !== discountType || extraAddonTotal > 0 ? (
+                  <button onClick={settleWithoutPayment} disabled={checkoutBusy || !!discountError} className="btn-primary w-full py-3 disabled:opacity-50">
+                    {adjusting ? 'Saving checkout…' : 'Save checkout & settle — £0.00 due'}
+                  </button>
+                ) : (
+                  <div className="bg-sage/10 rounded-xl p-4 text-sage text-sm text-center flex items-center gap-2 justify-center">
+                    <CheckCircle size={16} /> This booking is fully paid.
+                  </div>
+                )
               )}
             </div>
           )}

@@ -108,6 +108,8 @@ model Booking {
   slotId        String
   seats         Int           @default(1)
   totalAmount   Decimal       @db.Decimal(10, 2)
+  checkoutDiscountAmount Decimal @default(0) @db.Decimal(10, 2)
+  checkoutDiscountType String @default("NONE") // NONE | PERCENT (5%) | FIXED
   amountPaid    Decimal       @default(0) @db.Decimal(10, 2)
   creditApplied Decimal       @default(0) @db.Decimal(10, 2)
   status        BookingStatus @default(PENDING)

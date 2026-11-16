@@ -1,4 +1,5 @@
 import { SERVICE_CATALOG } from '../service-details'
+import { calculateCheckoutTotals } from '../payments/checkout-totals'
 import { StudioSession, SessionBooking, InventoryPotteryItem, StudioNotification, PotteryOrderItem } from './types'
 
 // ─── Default Pottery Inventory Catalog ───────────────────────────────────────
@@ -808,9 +809,8 @@ export function updateBookingStatus(sessionId: string, bookingId: string, status
 
 export function saveBookingOrderCheckout(sessionId: string, bookingId: string, payload: {
   potteryItems: PotteryOrderItem[]
-  grossTotal: number
-  depositDeducted: number
-  balanceDue: number
+  applyDiscount?: boolean
+  customDiscountAmount?: number
   paymentMethod: string
 }): SessionBooking | undefined {
   const store = getStudioStore()
@@ -820,10 +820,21 @@ export function saveBookingOrderCheckout(sessionId: string, bookingId: string, p
   const booking = bookings.find(b => b.id === bookingId)
   if (!booking) return undefined
 
+  const totals = calculateCheckoutTotals(
+    payload.potteryItems.reduce((sum, item) => sum + item.totalPrice, 0),
+    booking.amountPaid,
+    payload.applyDiscount,
+    payload.customDiscountAmount,
+  )
   booking.potteryItems = payload.potteryItems
   booking.orderCompleted = true
-  booking.orderTotal = payload.grossTotal
-  booking.orderBalanceDue = payload.balanceDue
+  booking.orderGrossTotal = totals.grossTotal
+  booking.orderDiscountPercent = totals.discountPercent
+  booking.orderDiscountType = totals.discountType
+  booking.orderDiscountAmount = totals.discountAmount
+  booking.orderTotal = totals.totalAmount
+  booking.orderDepositDeducted = totals.depositDeducted
+  booking.orderBalanceDue = totals.balanceDue
   booking.status = 'PAID'
 
   return booking

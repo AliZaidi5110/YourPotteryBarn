@@ -35,6 +35,10 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
   if (split.bookingId !== id) return NextResponse.json({ error: 'Split does not belong to this booking' }, { status: 400 })
 
   const amountToPay = amountOverride ?? Number(split.amount)
+  const outstandingPence = Math.max(0, Math.round((Number(split.booking.totalAmount) - Number(split.booking.amountPaid)) * 100))
+  if (Math.round(amountToPay * 100) > outstandingPence) {
+    return NextResponse.json({ error: 'Payment exceeds the remaining balance. Rebuild the split for the current checkout total.' }, { status: 409 })
+  }
 
   // Handle cash payment instantly
   if (provider === 'CASH') {

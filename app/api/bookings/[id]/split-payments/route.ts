@@ -72,6 +72,11 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
 
   const body = await req.json()
   const { splits } = CreateSplitSchema.parse(body)
+  const splitPence = splits.reduce((sum, split) => sum + Math.round(split.amount * 100), 0)
+  const balancePence = Math.max(0, Math.round((Number(booking.totalAmount) - Number(booking.amountPaid)) * 100))
+  if (splitPence > balancePence) {
+    return NextResponse.json({ error: 'Splits exceed the remaining balance after discounts and payments' }, { status: 400 })
+  }
 
   // Delete any existing PENDING splits before creating new set
   await prisma.splitPayment.deleteMany({

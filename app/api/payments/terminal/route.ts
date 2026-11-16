@@ -10,7 +10,7 @@ import { authOptions } from '@/lib/auth'
 
 const TerminalPaymentSchema = z.object({
   bookingId: z.string(),
-  amountPence: z.number().positive(), // amount in pence
+  amountPence: z.number().int().positive(), // amount in pence
 })
 
 export async function POST(req: NextRequest) {
@@ -31,6 +31,11 @@ export async function POST(req: NextRequest) {
 
     if (!booking) {
       return NextResponse.json({ error: 'Booking not found' }, { status: 404 })
+    }
+
+    const outstandingPence = Math.max(0, Math.round((Number(booking.totalAmount) - Number(booking.amountPaid)) * 100))
+    if (amountPence > outstandingPence) {
+      return NextResponse.json({ error: 'Payment exceeds the remaining balance. Refresh checkout and try again.' }, { status: 409 })
     }
 
     // Create pending payment record
@@ -84,6 +89,8 @@ export async function POST(req: NextRequest) {
         amountCharged: formatCurrency(amountPence / 100),
         paymentMethod: `Card Terminal (${result.cardBrand ?? 'Card'} ****${result.cardLast4 ?? ''})`,
         transactionId: result.transactionId,
+        discountAmount: Number(booking.checkoutDiscountAmount) > 0 ? formatCurrency(Number(booking.checkoutDiscountAmount)) : undefined,
+        discountType: booking.checkoutDiscountType,
       }).catch(console.error)
 
       return NextResponse.json({

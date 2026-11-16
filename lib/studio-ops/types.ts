@@ -42,6 +42,11 @@ export interface SessionBooking {
   orderCompleted?: boolean
   orderTotal?: number
   orderBalanceDue?: number
+  orderDiscountPercent?: number
+  orderDiscountType?: 'NONE' | 'PERCENT' | 'FIXED'
+  orderDiscountAmount?: number
+  orderGrossTotal?: number
+  orderDepositDeducted?: number
   serviceName?: string
 }
 

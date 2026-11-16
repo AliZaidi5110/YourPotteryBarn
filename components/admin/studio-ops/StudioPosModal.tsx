@@ -8,6 +8,8 @@ import {
 import { SessionBooking, InventoryPotteryItem, PotteryOrderItem } from '@/lib/studio-ops/types'
 import { DEFAULT_POTTERY_INVENTORY } from '@/lib/studio-ops/data'
 import { formatCurrency } from '@/lib/utils'
+import { calculateCheckoutTotals, customDiscountError, savedDiscountType, type CheckoutDiscountType } from '@/lib/payments/checkout-totals'
+import { CheckoutDiscountControl } from '@/components/admin/CheckoutDiscountControl'
 
 interface StudioPosModalProps {
   booking: SessionBooking
@@ -32,6 +34,9 @@ export function StudioPosModal({
   const [paymentProvider, setPaymentProvider] = useState<'SHIFT4' | 'STRIPE' | 'CASH' | 'VOUCHER'>('SHIFT4')
   const [isProcessing, setIsProcessing] = useState(false)
   const [receiptData, setReceiptData] = useState<any>(null)
+  const [discountType, setDiscountType] = useState<CheckoutDiscountType>(savedDiscountType(booking.orderDiscountType, booking.orderDiscountAmount))
+  const [customAmount, setCustomAmount] = useState(booking.orderDiscountAmount?.toFixed(2) ?? '')
+  const applyDiscount = discountType === 'PERCENT'
 
   // Voucher state
   const [voucherCode, setVoucherCode] = useState('')
@@ -65,6 +70,7 @@ export function StudioPosModal({
 
   // Calculate line items and totals
   const selectedLineItems: PotteryOrderItem[] = useMemo(() => {
+    if (booking.orderCompleted) return booking.potteryItems ?? []
     const list: PotteryOrderItem[] = []
     Object.entries(itemQuantities).forEach(([itemId, qty]) => {
       if (qty > 0) {
@@ -82,7 +88,7 @@ export function StudioPosModal({
       }
     })
     return list
-  }, [itemQuantities])
+  }, [itemQuantities, booking.orderCompleted, booking.potteryItems])
 
   // Totals
   const grossTotal = useMemo(() => {
@@ -90,8 +96,10 @@ export function StudioPosModal({
   }, [selectedLineItems])
 
   const depositPaid = Number(booking.amountPaid) || 0
-  const balanceDue = Math.max(0, grossTotal - depositPaid)
-  const creditSurplus = Math.max(0, depositPaid - grossTotal)
+  const discountError = discountType === 'FIXED' ? customDiscountError(customAmount, grossTotal) : ''
+  const totals = calculateCheckoutTotals(grossTotal, depositPaid, applyDiscount,
+    discountType === 'FIXED' ? (discountError ? 0 : Number(customAmount)) : undefined)
+  const { balanceDue, creditSurplus, discountAmount, totalAmount, depositDeducted } = totals
 
   // Quantity updates
   const handleUpdateQuantity = (itemId: string, delta: number) => {
@@ -131,6 +139,7 @@ export function StudioPosModal({
 
   // Handle Checkout Action
   const handleCollectPayment = async () => {
+    if (discountError) return
     if (balanceDue > 0 && paymentProvider === 'VOUCHER' && !voucherInfo) {
       setVoucherError('Please check and validate a voucher code before proceeding.')
       return
@@ -148,9 +157,8 @@ export function StudioPosModal({
           sessionId: booking.sessionId,
           bookingId: booking.id,
           potteryItems: selectedLineItems,
-          grossTotal,
-          depositDeducted: Math.min(depositPaid, grossTotal),
-          balanceDue,
+          applyDiscount,
+          customDiscountAmount: discountType === 'FIXED' ? Number(customAmount) : undefined,
           paymentMethod: paymentProvider === 'SHIFT4' ? 'TERMINAL_SHIFT4' : paymentProvider,
           voucherCode: paymentProvider === 'VOUCHER' ? voucherCode.trim().toUpperCase() : undefined,
         }),
@@ -385,6 +393,9 @@ export function StudioPosModal({
                   )}
                 </div>
 
+                <CheckoutDiscountControl type={discountType} onTypeChange={setDiscountType} customAmount={customAmount}
+                  onAmountChange={setCustomAmount} maxAmount={grossTotal} error={discountError} />
+
                 {/* Automatic Balance Calculation Box */}
                 <div className="bg-warm-white rounded-2xl p-4 border border-parchment space-y-2.5 shadow-pottery-sm">
                   <div className="flex justify-between text-xs text-clay">
@@ -392,12 +403,24 @@ export function StudioPosModal({
                     <span className="font-semibold">{formatCurrency(grossTotal)}</span>
                   </div>
 
+                  {discountType !== 'NONE' && (
+                    <>
+                      <div className="flex justify-between text-xs text-terracotta font-medium">
+                        <span>{discountType === 'FIXED' ? 'Custom checkout discount' : 'Checkout discount (5%)'}</span>
+                        <span>−{formatCurrency(discountAmount)}</span>
+                      </div>
+                      <div className="flex justify-between text-xs text-clay">
+                        <span>Discounted total</span>
+                        <span className="font-semibold">{formatCurrency(totalAmount)}</span>
+                      </div>
+                    </>
+                  )}
                   <div className="flex justify-between text-xs text-sage font-medium">
-                    <span>Less Deposit Paid (Upfront Credit)</span>
-                    <span className="font-semibold">−{formatCurrency(Math.min(depositPaid, grossTotal))}</span>
+                    <span>Less deposits / payments already collected</span>
+                    <span className="font-semibold">−{formatCurrency(depositDeducted)}</span>
                   </div>
 
-                  {depositPaid > grossTotal && (
+                  {creditSurplus > 0 && (
                     <div className="text-[11px] text-clay-light italic bg-sage/10 p-2 rounded-lg">
                       Remaining credit available for café & future booking: {formatCurrency(creditSurplus)}
                     </div>
@@ -519,7 +542,7 @@ export function StudioPosModal({
               <div className="pt-4 mt-4 border-t border-parchment space-y-2">
                 <button
                   onClick={handleCollectPayment}
-                  disabled={selectedLineItems.length === 0 || (balanceDue > 0 && paymentProvider === 'VOUCHER' && !voucherInfo)}
+                  disabled={!!discountError || selectedLineItems.length === 0 || (balanceDue > 0 && paymentProvider === 'VOUCHER' && !voucherInfo)}
                   className="btn-primary w-full py-3.5 text-base flex items-center justify-center gap-2 shadow-terracotta disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <CreditCard size={18} />
@@ -617,9 +640,21 @@ export function StudioPosModal({
                   <span>Gross Total</span>
                   <span>{formatCurrency(grossTotal)}</span>
                 </div>
+                {discountType !== 'NONE' && (
+                  <>
+                    <div className="flex justify-between text-terracotta font-medium">
+                      <span>{discountType === 'FIXED' ? 'Custom checkout discount' : 'Checkout discount (5%)'}</span>
+                      <span>−{formatCurrency(discountAmount)}</span>
+                    </div>
+                    <div className="flex justify-between text-clay-light">
+                      <span>Discounted total</span>
+                      <span>{formatCurrency(totalAmount)}</span>
+                    </div>
+                  </>
+                )}
                 <div className="flex justify-between text-sage font-medium">
-                  <span>Booking Credit Deducted</span>
-                  <span>−{formatCurrency(Math.min(depositPaid, grossTotal))}</span>
+                  <span>Deposits / arrival payments deducted</span>
+                  <span>−{formatCurrency(depositDeducted)}</span>
                 </div>
                 {receiptData?.voucherApplied > 0 && (
                   <div className="flex justify-between text-terracotta font-medium">
